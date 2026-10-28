@@ -42,5 +42,5 @@ decisions made while implementing it and what is still open.
 ## Deferred from milestone 8
 
 - Browser end-to-end tests (register → design → pay → publish → RSVP). Deferred by the user; add Playwright later with a dedicated test database.
-- Docker images are written and built in CI but not yet run end to end.
-- Hosting target, TLS, backups and monitoring remain undecided.
+- Docker images and the compose stack are written and built in CI but not yet run on a real server.
+- Monitoring and off-server copies of the backups remain to be set up.

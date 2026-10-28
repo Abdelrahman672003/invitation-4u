@@ -1,22 +1,31 @@
 # Deployment
 
-One server running Docker Compose: **caddy** (HTTPS) → **web** (nginx, static files, proxies `/api`) →
-**api** (Express + Prisma, SQLite file on a volume), plus a **backup** service. The images have been
-built by CI but this stack has not yet been run end to end on a real server, so expect to fix small
-things on the first deploy.
+One server running Docker Compose: **web** (nginx, static files, proxies `/api`) → **api** (Express +
+Prisma) → the **SQLite** database file on a volume, plus a **backup** service. HTTPS comes from nginx
+installed on the server itself, in front of the stack. The images are built by CI but this setup has
+not yet been run on a real server, so expect to fix small things on the first deploy.
+
+The `web` container only listens on `127.0.0.1:8080` (change it with `WEB_PORT`), so it is not
+reachable from the internet directly; the server's nginx receives the visitors, handles the
+certificate, and forwards to it. There are two proxies, which is why `docker-compose.yml` sets
+`TRUST_PROXY` to `2`.
+
+The database is a single file, `/data/app.db`, on the `app-data` volume next to the uploaded
+photos (`/data/uploads`). It is not a separate server; Docker keeps the volume across updates.
 
 ## What you need
 
-- A small Linux VPS (1 GB RAM is enough to start) with Docker and the Compose plugin.
-- A domain whose DNS `A` record points at the server, and ports 80 and 443 open (Caddy needs both
-  to get its certificate).
+- A small Linux server (1 GB RAM is enough to start) with Docker and the Compose plugin, plus `nginx`,
+  `certbot` and `git` (`sudo apt install nginx certbot python3-certbot-nginx git`).
+- A domain whose DNS `A` record points at the server, and ports 80 and 443 open.
 - A **live-mode** Lemon Squeezy store with its own product, API key and webhook (the test ones do not carry over).
 
 ## First deploy
 
 ```bash
-git clone <repo> invite && cd invite
+git clone <repository> invite && cd invite
 cp .env.production.example .env.production   # fill every value, see the comments inside
+chmod 600 .env.production
 docker compose up -d --build
 docker compose logs -f api                   # wait for "API listening"
 ```
@@ -32,7 +41,18 @@ docker compose exec api node apps/api/dist/seed.js
 docker compose exec -e ADMIN_EMAIL=you@example.com -e ADMIN_PASSWORD='change-me-please-1' api node apps/api/dist/create-admin.js
 ```
 
-Then open `https://<your domain>/health` (should answer `ok`) and sign in as the administrator.
+Then set up HTTPS with the server's nginx:
+
+```bash
+sudo cp deploy/nginx-host.conf /etc/nginx/sites-available/invite
+sudo nano /etc/nginx/sites-available/invite      # replace example.com with your domain
+sudo ln -s /etc/nginx/sites-available/invite /etc/nginx/sites-enabled/invite
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d <your domain>            # adds the certificate, https and the redirect
+```
+
+Certbot renews the certificate on its own. Open `https://<your domain>/health` (should answer `ok`)
+and sign in as the administrator.
 
 ## Payments (Lemon Squeezy, live)
 
@@ -55,6 +75,18 @@ docker compose up -d --build
 
 Migrations run on start and are additive. To roll back, check out the previous commit and run the
 same command; a migration that already ran is not undone, so restore a backup if one went wrong.
+Never edit files on the server by hand: change them on your computer and push, otherwise `git pull`
+stops with a conflict.
+
+For a private repository, give the server its own read-only key:
+
+```bash
+ssh-keygen -t ed25519 -C "invite-server" -f ~/.ssh/invite_deploy -N ""
+cat ~/.ssh/invite_deploy.pub
+```
+
+Add the printed key in GitHub → the repository → Settings → Deploy keys (leave write access off), and
+clone with `GIT_SSH_COMMAND="ssh -i ~/.ssh/invite_deploy" git clone git@github.com:<you>/<repository>.git`.
 
 ## Backups
 
@@ -68,7 +100,7 @@ Restore the database:
 ```bash
 docker compose stop api
 gunzip -c backups/app-<time>.db.gz > app.db
-docker compose cp app.db api:/data/app.db      # api must exist; use `docker compose run --rm` if it is stopped
+docker compose cp app.db api:/data/app.db      # use `docker compose run --rm` if api cannot start
 docker compose start api
 ```
 
@@ -80,13 +112,14 @@ See `.env.example` for development and `.env.production.example` for production.
 
 | Variable | Notes |
 | --- | --- |
-| `DOMAIN` | Public domain, without `https://`; Caddy issues its certificate |
 | `APP_URL`, `CORS_ORIGINS` | The public `https://` origin |
 | `COOKIE_SECURE` | Must be `true` in production (the API refuses to start otherwise) |
-| `TRUST_PROXY` | Set to `2` by compose (caddy and nginx) |
+| `TRUST_PROXY` | Set to `2` by compose (the server's nginx and the web container's nginx) |
+| `WEB_PORT` | Localhost port the `web` container listens on, default `8080`; must match `proxy_pass` in the server's nginx config |
 | `PAYMENT_PROVIDER` | `lemonsqueezy` (or `paymob`); `test` is refused in production |
 | `LEMONSQUEEZY_*` | API key, store id, variant id, webhook secret (max 40 characters), currency |
 | `PAYMENT_SWEEP_ENABLED` | `true` re-checks stuck pending payments |
+| `BACKUP_KEEP_DAYS`, `BACKUP_INTERVAL_HOURS` | Optional, read by compose for the backup service |
 | `EMAIL_PROVIDER` | Only `console` exists, so password-reset emails are not delivered; the "forgot password" link is hidden for now |
 
 Never commit real secrets. `SEED_ADMIN_*` are for development only; the seed refuses to create a

@@ -1,5 +1,7 @@
-# Production stack: caddy (HTTPS) -> web (nginx) -> api -> SQLite file on a named volume.
-# `backup` copies the database and uploads to ./backups every day. See docs/deployment.md.
+# Production stack: web (nginx) -> api -> SQLite database file on a named volume.
+# HTTPS is NOT handled here: nginx installed on the server terminates it and forwards to the `web`
+# port (see deploy/nginx-host.conf). `backup` copies the database and uploads to ./backups every day.
+# See docs/deployment.md.
 services:
   api:
     build: { context: ., target: api }
@@ -8,7 +10,7 @@ services:
     environment:
       DATABASE_URL: file:/data/app.db
       UPLOAD_DIR: /data/uploads
-      # Two proxies sit in front of the API: caddy and nginx.
+      # Two proxies in front of the API: nginx on the host and nginx in the web container.
       TRUST_PROXY: "2"
     volumes:
       - app-data:/data
@@ -17,25 +19,17 @@ services:
     build: { context: ., target: web }
     restart: unless-stopped
     depends_on: [api]
-    expose: ["80"]
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    depends_on: [web]
-    env_file: .env.production
-    ports: ["80:80", "443:443"]
-    volumes:
-      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy-data:/data
-      - caddy-config:/config
+    # Reachable only from this machine: nginx on the host faces the internet and forwards here.
+    ports: ["127.0.0.1:${WEB_PORT:-8080}:80"]
   backup:
     build: { context: ., target: backup }
     restart: unless-stopped
+    environment:
+      BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+      BACKUP_INTERVAL_HOURS: ${BACKUP_INTERVAL_HOURS:-24}
     volumes:
       - app-data:/data
       - ./backups:/backups
 
 volumes:
   app-data:
-  caddy-data:
-  caddy-config:

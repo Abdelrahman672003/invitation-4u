@@ -1,4 +1,4 @@
-# Two deployable images from one build: `api` (Express + Prisma) and `web` (static files behind nginx).
+# Three images from one build: `api` (Express + Prisma), `web` (static files behind nginx) and `backup`.
 
 FROM node:22-slim AS build
 WORKDIR /app
@@ -30,7 +30,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=20s CMD node -e "fetch('h
 CMD ["sh", "-c", "npx prisma migrate deploy && node apps/api/dist/index.js"]
 
 FROM nginx:1.27-alpine AS web
-COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
+COPY deploy/nginx-container.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/apps/web/dist /usr/share/nginx/html
 EXPOSE 80
 

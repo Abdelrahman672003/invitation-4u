@@ -12,7 +12,14 @@ playwright-report/
 test-results/
 apps/api/uploads/
 .data/
+# Daily database and upload copies made by the `backup` service
+backups/
+# Personal Claude Code settings
+.claude/settings.local.json
 
-# SQLite databases
-prisma/*.db
-prisma/*.db-journal
+# SQLite databases, wherever they end up (including the -wal/-shm files it writes beside them)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+uploads/
