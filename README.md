@@ -9,7 +9,7 @@ Arabic-first platform for creating, publishing and sharing digital invitations, 
 | --- | --- |
 | Web | React 19, TypeScript, Vite, Tailwind CSS v4, React Router, TanStack Query, react-hook-form, i18next |
 | API | Node 22, Express 5, TypeScript, Zod |
-| Data | SQLite, Prisma (migrations in `prisma/migrations`) |
+| Data | MySQL 8, Prisma (migrations in `prisma/migrations`) |
 | Tests | Vitest, React Testing Library, Supertest (Playwright arrives with the E2E milestone) |
 
 ```
@@ -22,11 +22,12 @@ docs/            requirements, api, database, deployment
 
 ## Getting started
 
-Requirements: Node 22+ (no database server needed; SQLite is a local file).
+Requirements: Node 22+ and Docker (only to run the development MySQL database).
 
 ```bash
 cp .env.example .env          # dev defaults work out of the box
 npm install
+npm run db:up                 # start MySQL in Docker (also creates the test database on first start)
 npm run db:deploy             # apply migrations
 npm run db:seed               # categories, packages, dev admin (see SEED_ADMIN_* in .env)
 npm run dev                   # API :4000 and web :5173
@@ -44,6 +45,7 @@ Password-reset emails are printed to the API console (console email adapter).
 | `npm run lint` / `npm run typecheck` | ESLint / TypeScript across the workspace |
 | `npm run build` | Production builds of API (`apps/api/dist`) and web (`apps/web/dist`) |
 | `npm run db:migrate` | Create a new migration during development |
+| `npm run db:up` / `npm run db:down` | Start / stop the development MySQL container (data is kept in a Docker volume) |
 
 ## Milestones
 

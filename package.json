@@ -17,6 +17,8 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "format": "prettier --write .",
+    "db:up": "docker compose -f docker-compose.dev.yml up -d --wait db",
+    "db:down": "docker compose -f docker-compose.dev.yml down",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",

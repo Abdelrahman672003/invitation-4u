@@ -1,0 +1,24 @@
+# Local development database only (the API and the website run with `npm run dev`).
+#   npm run db:up      start MySQL (first start also creates the `invite_test` database for the tests)
+#   npm run db:down    stop it; the data stays in the `dev-db` volume
+# The production stack is docker-compose.yml.
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    environment:
+      MYSQL_ROOT_PASSWORD: invite
+      MYSQL_DATABASE: invite
+    ports: ["127.0.0.1:3307:3306"]
+    volumes:
+      - dev-db:/var/lib/mysql
+      - ./deploy/mysql-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pinvite"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  dev-db:

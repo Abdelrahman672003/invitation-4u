@@ -1,22 +1,24 @@
-#!/bin/sh
-# Takes a consistent copy of the SQLite database (safe while the API is running) and an archive of the
-# uploaded files, then deletes copies older than BACKUP_KEEP_DAYS. Runs forever, once per interval.
-# These stay on this server: copy /backups somewhere else too (see docs/deployment.md).
-set -eu
+#!/bin/bash
+# Once per interval: dumps the MySQL database (consistent, without locking the site) and archives the
+# uploaded files, both into /backups (a Docker volume), then deletes copies older than BACKUP_KEEP_DAYS.
+# The volume lives on this server: also copy it somewhere else (see docs/deployment.md).
+set -euo pipefail
 
-DB=/data/app.db
 OUT=/backups
 KEEP_DAYS="${BACKUP_KEEP_DAYS:-14}"
 INTERVAL_HOURS="${BACKUP_INTERVAL_HOURS:-24}"
+export MYSQL_PWD="$MYSQL_PASSWORD"
 
 mkdir -p "$OUT"
 while true; do
   stamp=$(date -u +%Y%m%d-%H%M%S)
-  if [ -f "$DB" ]; then
-    sqlite3 "$DB" ".backup '$OUT/app-$stamp.db'" && gzip -f "$OUT/app-$stamp.db"
-    echo "$(date -u) database backed up: app-$stamp.db.gz"
+  if mysqldump -h db -u "$MYSQL_USER" --single-transaction --no-tablespaces --routines "$MYSQL_DATABASE" \
+      | gzip > "$OUT/db-$stamp.sql.gz.part"; then
+    mv "$OUT/db-$stamp.sql.gz.part" "$OUT/db-$stamp.sql.gz"
+    echo "$(date -u) database dumped: db-$stamp.sql.gz"
   else
-    echo "$(date -u) no database yet, skipping"
+    rm -f "$OUT/db-$stamp.sql.gz.part"
+    echo "$(date -u) DATABASE DUMP FAILED" >&2
   fi
   if [ -d /data/uploads ]; then
     tar -czf "$OUT/uploads-$stamp.tar.gz" -C /data uploads

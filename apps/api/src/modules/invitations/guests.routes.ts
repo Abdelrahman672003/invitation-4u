@@ -84,7 +84,7 @@ guestsRouter.get('/guests', async (req, res) => {
     include: { rsvps: { orderBy: { respondedAt: 'desc' }, take: 1 } },
   });
 
-  // Filtering happens in memory: guest lists are small and SQLite LIKE is not Unicode case-aware.
+  // Filtering happens in memory: guest lists are small and names are matched the way RSVP duplicates are (alef variants, diacritics).
   const needle = query.q ? rsvpDedupeKey(query.q) : null;
   const listed = rows.map(toGuestDto);
   // People who answered on the public page but are not on the list still count: they appear as

@@ -13,8 +13,18 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: file:./dev.db
-      TEST_DATABASE_URL: file:./test.db
+      DATABASE_URL: mysql://root:invite@127.0.0.1:3306/invite
+      TEST_DATABASE_URL: mysql://root:invite@127.0.0.1:3306/invite_test
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: invite
+          MYSQL_DATABASE: invite
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pinvite --silent"
+          --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,6 +32,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Create the test database
+        run: mysql -h 127.0.0.1 -uroot -pinvite -e "CREATE DATABASE IF NOT EXISTS invite_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
       - run: npx prisma generate
       - run: npx prisma validate
       - name: Lint

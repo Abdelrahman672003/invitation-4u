@@ -1,23 +1,37 @@
 # Deployment
 
-One server running Docker Compose: **web** (nginx, static files, proxies `/api`) → **api** (Express +
-Prisma) → the **SQLite** database file on a volume, plus a **backup** service. HTTPS comes from nginx
-installed on the server itself, in front of the stack. The images are built by CI but this setup has
-not yet been run on a real server, so expect to fix small things on the first deploy.
+One server running Docker Compose, with every container on a single private network (`invite`):
+**web** (nginx, static files, proxies `/api`) → **api** (Express + Prisma) → **db** (MySQL 8.4), plus a
+**backup** job. The images are built by CI but this setup has not yet been run on a real server, so
+expect to fix small things on the first deploy.
 
-The `web` container only listens on `127.0.0.1:8080` (change it with `WEB_PORT`), so it is not
-reachable from the internet directly; the server's nginx receives the visitors, handles the
-certificate, and forwards to it. There are two proxies, which is why `docker-compose.yml` sets
-`TRUST_PROXY` to `2`.
+**The server exposes one port: `80`, plain http, owned by `web`.** The API, the database and the backup
+job publish nothing; they can only be reached from inside the network. Open only port 80 (and 22 for
+SSH) in the server's firewall. To use another port set `WEB_PORT` (for example `8080`) and put the same
+port in `APP_URL` and `CORS_ORIGINS`.
 
-The database is a single file, `/data/app.db`, on the `app-data` volume next to the uploaded
-photos (`/data/uploads`). It is not a separate server; Docker keeps the volume across updates.
+**There is no HTTPS.** Passwords, sessions and everything else cross the network unencrypted, so anyone
+on the path (a café Wi-Fi, an ISP) can read them. That is acceptable for a trial with test data, not for
+real customers. When you want HTTPS later, put a TLS proxy in front of port 80 (Cloudflare, or nginx
+with certbot), set `COOKIE_SECURE=true` and `APP_URL`/`CORS_ORIGINS` to the `https://` address, and let
+the web container trust that proxy's forwarded client address (`X-Forwarded-For` in
+`deploy/nginx-container.conf` and `TRUST_PROXY` in `docker-compose.yml`).
+
+Three Docker volumes hold everything that must survive updates:
+
+| Volume | Contents |
+| --- | --- |
+| `db-data` | The MySQL data files |
+| `app-data` | Uploaded photos and music (`/data/uploads` in the `api` container) |
+| `backups` | Daily database dumps and upload archives written by the `backup` service |
+
+The stack is named `invite`, so the volumes are `invite_db-data`, `invite_app-data` and `invite_backups`
+(list them with `docker volume ls`).
 
 ## What you need
 
-- A small Linux server (1 GB RAM is enough to start) with Docker and the Compose plugin, plus `nginx`,
-  `certbot` and `git` (`sudo apt install nginx certbot python3-certbot-nginx git`).
-- A domain whose DNS `A` record points at the server, and ports 80 and 443 open.
+- A small Linux server (1 GB RAM is enough to start) with Docker, the Compose plugin and `git`.
+- Its public IP address (or a domain pointing at it), and port 80 open.
 - A **live-mode** Lemon Squeezy store with its own product, API key and webhook (the test ones do not carry over).
 
 ## First deploy
@@ -25,6 +39,8 @@ photos (`/data/uploads`). It is not a separate server; Docker keeps the volume a
 ```bash
 git clone <repository> invite && cd invite
 cp .env.production.example .env.production   # fill every value, see the comments inside
+openssl rand -hex 24                          # run twice: MYSQL_ROOT_PASSWORD and MYSQL_PASSWORD
+# MYSQL_PASSWORD must also be pasted into DATABASE_URL (hex has no characters that need escaping)
 chmod 600 .env.production
 docker compose up -d --build
 docker compose logs -f api                   # wait for "API listening"
@@ -41,25 +57,16 @@ docker compose exec api node apps/api/dist/seed.js
 docker compose exec -e ADMIN_EMAIL=you@example.com -e ADMIN_PASSWORD='change-me-please-1' api node apps/api/dist/create-admin.js
 ```
 
-Then set up HTTPS with the server's nginx:
-
-```bash
-sudo cp deploy/nginx-host.conf /etc/nginx/sites-available/invite
-sudo nano /etc/nginx/sites-available/invite      # replace example.com with your domain
-sudo ln -s /etc/nginx/sites-available/invite /etc/nginx/sites-enabled/invite
-sudo nginx -t && sudo systemctl reload nginx
-sudo certbot --nginx -d <your domain>            # adds the certificate, https and the redirect
-```
-
-Certbot renews the certificate on its own. Open `https://<your domain>/health` (should answer `ok`)
-and sign in as the administrator.
+Open `http://<server address>/health` (should answer `ok`) and sign in as the administrator.
 
 ## Payments (Lemon Squeezy, live)
 
 1. Activate the store (Lemon Squeezy asks for payout and identity details). Confirm Egypt is a supported payout country.
 2. Create the product and one variant; copy the store id and variant id.
-3. Settings → API: create a key. Settings → Webhooks: add `https://<your domain>/api/v1/webhooks/payments/lemonsqueezy`
+3. Settings → API: create a key. Settings → Webhooks: add `<APP_URL>/api/v1/webhooks/payments/lemonsqueezy`
    with a signing secret of at most 40 characters, events `order_created` and `order_refunded`.
+   Lemon Squeezy may refuse a plain-`http` address or a bare IP for webhooks; if it does, the site needs
+   a domain with HTTPS in front of it (see above) before payments can be confirmed automatically.
 4. Put the four values in `.env.production`, then `docker compose up -d api`.
 5. Make one real purchase with your own card, check the invitation publishes, refund it from the admin panel, and check it goes offline.
 
@@ -90,21 +97,34 @@ clone with `GIT_SSH_COMMAND="ssh -i ~/.ssh/invite_deploy" git clone git@github.c
 
 ## Backups
 
-The `backup` service writes a copy of the database (`app-<time>.db.gz`) and the uploads
-(`uploads-<time>.tar.gz`) to `./backups` once a day and keeps 14 days (`BACKUP_KEEP_DAYS`).
-That protects against mistakes, not against losing the server, so also copy `./backups` somewhere
-else (another machine or object storage) on a schedule, for example with `rclone` from cron.
-
-Restore the database:
+The `backup` service writes a `mysqldump` of the database (`db-<time>.sql.gz`) and an archive of the
+uploads (`uploads-<time>.tar.gz`) into the `backups` volume once a day, and keeps 14 days
+(`BACKUP_KEEP_DAYS`). The dump is taken without locking the site. Check that it is working:
 
 ```bash
-docker compose stop api
-gunzip -c backups/app-<time>.db.gz > app.db
-docker compose cp app.db api:/data/app.db      # use `docker compose run --rm` if api cannot start
-docker compose start api
+docker compose logs backup
+docker compose run --rm --entrypoint ls backup -lh /backups
 ```
 
-Do a restore test once before you rely on it.
+The volume lives on this server, so it protects against mistakes, not against losing the server. Also
+copy it somewhere else (another machine or object storage) on a schedule. For example, pack it into a
+file in the current folder and download that:
+
+```bash
+docker run --rm -v invite_backups:/backups -v "$PWD":/out alpine tar czf /out/backups.tgz -C / backups
+```
+
+Restore the database from a dump (this replaces the current data):
+
+```bash
+docker compose stop api web
+docker compose run --rm --entrypoint bash backup -c \
+  'export MYSQL_PWD="$MYSQL_PASSWORD"; gunzip -c /backups/db-<time>.sql.gz | mysql -h db -u "$MYSQL_USER" "$MYSQL_DATABASE"'
+docker compose start api web
+```
+
+The dump drops and recreates each table, so it can be loaded over an existing database. Do a restore test
+once before you rely on it (for example into a copy of the stack on another machine).
 
 ## Environment variables
 
@@ -112,10 +132,12 @@ See `.env.example` for development and `.env.production.example` for production.
 
 | Variable | Notes |
 | --- | --- |
-| `APP_URL`, `CORS_ORIGINS` | The public `https://` origin |
-| `COOKIE_SECURE` | Must be `true` in production (the API refuses to start otherwise) |
-| `TRUST_PROXY` | Set to `2` by compose (the server's nginx and the web container's nginx) |
-| `WEB_PORT` | Localhost port the `web` container listens on, default `8080`; must match `proxy_pass` in the server's nginx config |
+| `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD` | Create the database and its user the first time the `db` container starts. Changing them later does not change an existing database |
+| `DATABASE_URL` | `mysql://<MYSQL_USER>:<MYSQL_PASSWORD>@db:3306/<MYSQL_DATABASE>` |
+| `APP_URL`, `CORS_ORIGINS` | The public address, `http://<server address>` (plus `:<port>` if `WEB_PORT` is not 80) |
+| `COOKIE_SECURE`, `ALLOW_INSECURE_HTTP` | `false` and `true` for plain http. With `COOKIE_SECURE=false` the API refuses to start in production unless `ALLOW_INSECURE_HTTP=true` |
+| `TRUST_PROXY` | Set to `1` by compose: the web container's nginx is the only proxy in front of the API |
+| `WEB_PORT` | The one published port, default `80` (read by compose from the shell or a `.env` file next to it) |
 | `PAYMENT_PROVIDER` | `lemonsqueezy` (or `paymob`); `test` is refused in production |
 | `LEMONSQUEEZY_*` | API key, store id, variant id, webhook secret (max 40 characters), currency |
 | `PAYMENT_SWEEP_ENABLED` | `true` re-checks stuck pending payments |

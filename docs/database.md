@@ -1,6 +1,8 @@
 # Database
 
-SQLite via Prisma (files `prisma/dev.db` and `prisma/test.db`, gitignored). Production should use a persistent disk or move to a server database by changing the Prisma provider. Schema: `prisma/schema.prisma`. Migrations: `prisma/migrations`.
+MySQL 8.4 via Prisma. Development and tests use the container in `docker-compose.dev.yml` (`npm run db:up`; databases `invite` and `invite_test` on port 3307); production uses the `db` service in `docker-compose.yml`. Schema: `prisma/schema.prisma`. Migrations: `prisma/migrations` (one baseline migration, written when the project moved from SQLite to MySQL).
+
+Tables use `utf8mb4` with the `utf8mb4_unicode_ci` collation, so Arabic is stored correctly and text comparisons and unique indexes ignore letter case (and some accents). Strings are `VARCHAR(191)`; free text (notes, messages, descriptions, errors) is `TEXT`.
 
 ## Conventions
 
@@ -30,9 +32,10 @@ SQLite via Prisma (files `prisma/dev.db` and `prisma/test.db`, gitignored). Prod
 
 ## Constraints beyond Prisma
 
-Added by hand in the initial migration as SQLite triggers (SQLite cannot add CHECKs later):
+Added by hand at the end of the baseline migration as MySQL `CHECK` constraints (enforced by MySQL 8). Because the
+columns are case-insensitive, the rules compare as binary or use a case-sensitive `REGEXP_LIKE`:
 
-- `users.email = lower(btrim(email))`
+- `users.email` equals `LOWER(TRIM(email))`
 - Non-negative `packages.price_minor`, `payments.amount_minor`, `rsvps.attendees_count`; `guests.max_attendees >= 1`
 - Currency codes are 3 upper-case letters
 - `invitations.slug` is lower-case kebab-case ASCII

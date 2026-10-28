@@ -1,14 +1,15 @@
-// Digital Invitation Platform — SQLite data model.
+// Digital Invitation Platform — MySQL data model.
 // Conventions: UUID primary keys, snake_case tables/columns, UTC timestamps,
 // money in integer minor units + ISO currency code. Extra CHECK constraints
 // live in the migration SQL (Prisma cannot express them).
+// MySQL strings are VARCHAR(191) unless noted; free text that can be longer uses @db.Text.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -87,7 +88,7 @@ model Session {
   expiresAt  DateTime @map("expires_at")
   lastSeenAt DateTime @default(now()) @map("last_seen_at")
   ipAddress  String?  @map("ip_address")
-  userAgent  String?  @map("user_agent")
+  userAgent  String?  @map("user_agent") @db.Text
   createdAt  DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -154,9 +155,9 @@ model Template {
   slug          String         @unique
   nameEn        String         @map("name_en")
   nameAr        String         @map("name_ar")
-  descriptionEn String?        @map("description_en")
-  descriptionAr String?        @map("description_ar")
-  thumbnailUrl  String?        @map("thumbnail_url")
+  descriptionEn String?        @map("description_en") @db.Text
+  descriptionAr String?        @map("description_ar") @db.Text
+  thumbnailUrl  String?        @map("thumbnail_url") @db.Text
   /// Validated template configuration (layout, palette, fonts, sections).
   designConfig  Json           @map("design_config")
   version       Int            @default(1)
@@ -235,7 +236,7 @@ model Guest {
   phone        String?
   groupName    String?  @map("group_name")
   maxAttendees Int      @default(1) @map("max_attendees")
-  notes        String?
+  notes        String?  @db.Text
   /// Reserved for personalized RSVP links (/i/:slug?g=token) in a later release.
   inviteToken  String?  @unique @map("invite_token")
   createdAt    DateTime @default(now()) @map("created_at")
@@ -256,7 +257,7 @@ model Rsvp {
   name           String
   response       RsvpResponse
   attendeesCount Int          @default(1) @map("attendees_count")
-  message        String?
+  message        String?      @db.Text
   /// Normalized identity used to detect duplicate submissions (rule documented in docs/database.md).
   dedupeKey      String       @map("dedupe_key")
   respondedAt    DateTime     @default(now()) @map("responded_at")
@@ -277,7 +278,7 @@ model Blessing {
   id           String   @id @default(uuid())
   invitationId String   @map("invitation_id")
   name         String
-  message      String
+  message      String   @db.Text
   createdAt    DateTime @default(now()) @map("created_at")
 
   invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
@@ -330,7 +331,7 @@ model Payment {
   amountMinor       Int           @map("amount_minor")
   currency          String
   status            PaymentStatus @default(PENDING)
-  failureReason     String?       @map("failure_reason")
+  failureReason     String?       @map("failure_reason") @db.Text
   paidAt            DateTime?     @map("paid_at")
   createdAt         DateTime      @default(now()) @map("created_at")
   updatedAt         DateTime      @updatedAt @map("updated_at")
@@ -354,7 +355,7 @@ model WebhookEvent {
   eventType        String?                 @map("event_type")
   payload          Json
   processingStatus WebhookProcessingStatus @default(RECEIVED) @map("processing_status")
-  error            String?
+  error            String?                 @db.Text
   receivedAt       DateTime                @default(now()) @map("received_at")
   processedAt      DateTime?               @map("processed_at")
 

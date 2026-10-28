@@ -10,7 +10,7 @@ COPY apps/web/package.json apps/web/
 RUN npm ci
 COPY . .
 # DATABASE_URL is only needed so `prisma generate` can read the schema; no database is touched.
-RUN DATABASE_URL=file:./build.db npx prisma generate && npm run build
+RUN DATABASE_URL=mysql://build:build@localhost:3306/build npx prisma generate && npm run build
 
 FROM node:22-slim AS api
 ENV NODE_ENV=production API_PORT=4000
@@ -21,7 +21,7 @@ COPY --from=build /app/package.json ./
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY --from=build /app/apps/api/package.json ./apps/api/
-# The data volume is created from this directory, so it must belong to the user the API runs as.
+# Uploaded files go here (a volume); it is created from this directory, so it must belong to the API's user.
 RUN mkdir -p /data/uploads && chown -R node:node /data
 USER node
 EXPOSE 4000
@@ -34,10 +34,12 @@ COPY deploy/nginx-container.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/apps/web/dist /usr/share/nginx/html
 EXPOSE 80
 
-# Daily copy of the database and uploads; see deploy/backup.sh.
-FROM alpine:3.20 AS backup
-RUN apk add --no-cache sqlite tar gzip
+# Daily dump of the database and archive of the uploads; see deploy/backup.sh. It is the MySQL image
+# so that `mysqldump` and `mysql` are exactly the version that matches the server.
+FROM mysql:8.4 AS backup
+USER root
+RUN microdnf install -y gzip tar findutils && microdnf clean all
 COPY deploy/backup.sh /backup.sh
 # Strip Windows line endings so the script runs whatever machine the repository was checked out on.
 RUN sed -i 's/\r$//' /backup.sh && chmod +x /backup.sh
-CMD ["/backup.sh"]
+ENTRYPOINT ["/backup.sh"]

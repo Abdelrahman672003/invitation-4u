@@ -19,6 +19,14 @@ const envSchema = z.object({
     .enum(['true', 'false'])
     .default('false')
     .transform((value) => value === 'true'),
+  /**
+   * Lets a production deployment run over plain http (COOKIE_SECURE=false). Passwords and session
+   * cookies then cross the network unencrypted, so this must be an explicit choice.
+   */
+  ALLOW_INSECURE_HTTP: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((value) => value === 'true'),
   /** Payment provider adapter. Only the simulated 'test' provider exists until a real one is chosen. */
   PAYMENT_PROVIDER: z.enum(['test', 'paymob', 'lemonsqueezy']).default('test'),
   /** Lemon Squeezy (merchant of record); all of these are required once PAYMENT_PROVIDER=lemonsqueezy. */
@@ -73,8 +81,10 @@ export const env = parsed.data;
 export const isProduction = env.NODE_ENV === 'production';
 export const isTest = env.NODE_ENV === 'test';
 
-if (isProduction && !env.COOKIE_SECURE) {
-  throw new Error('COOKIE_SECURE must be true in production.');
+if (isProduction && !env.COOKIE_SECURE && !env.ALLOW_INSECURE_HTTP) {
+  throw new Error(
+    'COOKIE_SECURE must be true in production (set ALLOW_INSECURE_HTTP=true to serve over plain http).',
+  );
 }
 
 if (env.PAYMENT_PROVIDER === 'paymob') {
