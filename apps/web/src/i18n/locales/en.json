@@ -1,0 +1,1329 @@
+{
+  "brand": {
+    "name": "Invitation 4u",
+    "tagline": "Elegant digital invitations for every occasion"
+  },
+  "nav": {
+    "home": "Home",
+    "templates": "Templates",
+    "pricing": "Pricing",
+    "dashboard": "My invitations",
+    "admin": "Admin",
+    "profile": "Account",
+    "login": "Sign in",
+    "register": "Create account",
+    "logout": "Sign out",
+    "switchLanguage": "العربية",
+    "switchLanguageLabel": "التبديل إلى العربية",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "howItWorks": "How it works",
+    "faq": "FAQ",
+    "payments": "Payments"
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Try again",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "comingSoon": "Coming soon",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "confirmTitle": "Are you sure?"
+  },
+  "auth": {
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "newPassword": "New password"
+    },
+    "passwordHint": "At least {{min}} characters",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to manage your invitations and guest responses.",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create one",
+      "forgot": "Forgot password?"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Design your invitation for free and publish when you're ready.",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "terms": "By creating an account you agree to the Terms and Privacy Policy."
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we'll send you a reset link.",
+      "submit": "Send link",
+      "sentTitle": "Check your inbox",
+      "sent": "If an account exists for that email, you'll receive a link valid for one hour.",
+      "backToLogin": "Back to sign in"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "subtitle": "Pick a strong password you haven't used before.",
+      "submit": "Save password",
+      "successTitle": "Password changed",
+      "success": "You've been signed out on all devices. You can now sign in with your new password.",
+      "goToLogin": "Sign in",
+      "missingToken": "This reset link is incomplete. Please request a new one."
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Enter a valid email address",
+    "tooLong": "This is too long",
+    "passwordTooShort": "Password must be at least {{min}} characters",
+    "nameTooShort": "Name is too short",
+    "emailTaken": "An account with this email already exists",
+    "time": "Enter a valid time",
+    "date": "Enter a valid date",
+    "color": "Enter a valid colour",
+    "templateUnavailable": "This template is not available",
+    "phone": "Enter a valid phone number",
+    "attendees": "Enter a number of guests between 1 and the allowed maximum",
+    "premiumRequired": "This template needs the premium package",
+    "tooManyGuests": "Your guest list is larger than this package allows",
+    "url": "Enter a link starting with https://",
+    "photo": "Choose a valid image (JPG, PNG or WebP).",
+    "music": "Choose an MP3 file up to 6 MB.",
+    "asset": "Invalid image",
+    "slug": "Use only lowercase English letters, numbers and dashes",
+    "currentPasswordWrong": "The current password is incorrect",
+    "passwordMismatch": "The passwords do not match"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Couldn't reach the server. Check your connection.",
+    "INVALID_CREDENTIALS": "Email or password is incorrect.",
+    "RATE_LIMITED": "Too many attempts. Please wait a moment and try again.",
+    "INVALID_OR_EXPIRED_TOKEN": "This link is invalid or has expired.",
+    "EMAIL_TAKEN": "An account with this email already exists.",
+    "VALIDATION_ERROR": "Please review the highlighted fields."
+  },
+  "home": {
+    "eyebrow": "Digital invitation studio",
+    "title": "An invitation worthy of your occasion, delivered in seconds",
+    "subtitle": "Pick a design, add your event details, share the link on WhatsApp and track RSVPs in one place.",
+    "cta": "Start your invitation",
+    "secondaryCta": "Browse templates",
+    "categoriesTitle": "A design for every occasion",
+    "categoriesError": "Couldn't load categories."
+  },
+  "categories": {
+    "wedding": "Luxurious wedding invitations, romantic or traditional.",
+    "birthday": "Joyful kids' parties and refined adult birthdays.",
+    "engagement-bridal": "Engagements, henna nights, bridal showers and more.",
+    "graduation": "Celebrate the milestone with elegant academic designs."
+  },
+  "showcase": {
+    "label": "With love, we invite you",
+    "names": "Sara & Omar",
+    "occasion": "to celebrate our wedding",
+    "date": "Thursday, 12 December 2026",
+    "venue": "Almasa Hotel — Cairo"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}",
+    "subtitle": "All your invitations and guest responses in one place.",
+    "create": "New invitation",
+    "emptyTitle": "You haven't created an invitation yet",
+    "emptyBody": "Start by choosing your occasion and a design you love. Previewing is free before you publish.",
+    "emptyCta": "Choose a design",
+    "noDate": "Date not set",
+    "edit": "Continue editing",
+    "archive": "Archive",
+    "restore": "Restore",
+    "archiveConfirm": "Archive this invitation? You can restore it later.",
+    "error": "Couldn't load your invitations.",
+    "manage": "Manage",
+    "stats": "{{accepted}} accepted · {{declined}} declined · {{guests}} guests",
+    "payment": "Payment",
+    "delete": "Delete",
+    "deleteConfirm": "Delete \"{{title}}\" permanently? Its guest list and replies will be lost. This cannot be undone.",
+    "deleteConfirmPublished": "Delete \"{{title}}\" permanently? Its link will stop working and its guest list and replies will be lost. This cannot be undone."
+  },
+  "profile": {
+    "title": "Account settings",
+    "subtitle": "Update your name and preferred interface language.",
+    "language": "Interface language",
+    "saved": "Changes saved",
+    "memberSince": "Member since {{date}}",
+    "goInvitations": "My invitations",
+    "goPayments": "My payments",
+    "newInvitation": "Create an invitation",
+    "recent": "Recent invitations",
+    "details": "Account details",
+    "stats": {
+      "invitations": "Invitations",
+      "invitationsHint": "{{published}} published · {{drafts}} drafts",
+      "published": "Live invitations",
+      "guests": "Guests on your lists",
+      "attendeesHint": "{{count}} confirmed attendees",
+      "accepted": "Accepted replies",
+      "payments": "Payments made",
+      "spent": "Total spent"
+    },
+    "password": {
+      "title": "Change password",
+      "hint": "You stay signed in here; other devices are signed out.",
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Confirm new password",
+      "submit": "Update password",
+      "saved": "Your password was changed."
+    }
+  },
+  "admin": {
+    "title": "Overview",
+    "subtitle": "Key platform metrics.",
+    "customers": "Customers",
+    "invitations": "Invitations",
+    "published": "Published invitations",
+    "payments": "Payments by status",
+    "noPayments": "No payments yet.",
+    "tabs": {
+      "overview": "Overview",
+      "users": "Users",
+      "invitations": "Invitations",
+      "templates": "Templates",
+      "catalog": "Occasions",
+      "packages": "Pricing",
+      "payments": "Payments",
+      "audit": "Audit log"
+    },
+    "revenue": "Revenue",
+    "failedWebhooks_one": "{{count}} payment event failed to process",
+    "failedWebhooks_other": "{{count}} payment events failed to process",
+    "failedWebhooksHint": "Open Payments and use Reconcile to re-check them with the provider.",
+    "search": "Search",
+    "empty": "Nothing to show.",
+    "role": "Role",
+    "promote": "Make admin",
+    "demote": "Remove admin",
+    "confirmRole": "Change the role of {{email}}?",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "owner": "Owner",
+    "slug": "Link",
+    "category": "Occasion",
+    "order": "Order",
+    "templateStatus": {
+      "DRAFT": "Draft",
+      "ACTIVE": "Active",
+      "ARCHIVED": "Archived"
+    },
+    "confirmAction": "Are you sure? This is recorded in the audit log.",
+    "catalogNote": "Disabling an occasion hides it from new invitations; existing invitations are not affected.",
+    "price": "Price",
+    "premiumTemplates": "Premium templates",
+    "enabled": "Enabled",
+    "priceNote": "Price changes apply to new checkouts only. Past payments keep the amount that was charged.",
+    "customer": "Customer",
+    "reconcile": "Reconcile",
+    "markRefunded": "Mark refunded",
+    "confirmRefund": "Mark this payment as refunded and unpublish the invitation? Refund the money at the payment provider separately.",
+    "refundNote": "Marking a payment refunded records it here and unpublishes the invitation. The money itself is returned through the payment provider.",
+    "actor": "By",
+    "action": "Action",
+    "entity": "Record",
+    "system": "System",
+    "actions": "Actions",
+    "roles": {
+      "CUSTOMER": "Customer",
+      "ADMIN": "Admin"
+    },
+    "nameEn": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "maxGuests": "Guest limit",
+    "unlimited": "Unlimited",
+    "templatesNote": "Names and order are saved with the Save button. Status and Premium apply immediately. Archiving a template hides it from new invitations only.",
+    "toast": {
+      "saved": "Saved successfully",
+      "failed": "Something went wrong. Nothing was changed.",
+      "promoted": "{{email}} is now an admin",
+      "demoted": "{{email}} is no longer an admin",
+      "unpublished": "Invitation unpublished successfully",
+      "archived": "Invitation archived successfully",
+      "statusChanged": "Template status changed to {{status}}",
+      "premiumOn": "Marked as premium",
+      "premiumOff": "No longer premium",
+      "enabled": "{{name}} enabled",
+      "disabled": "{{name}} disabled",
+      "refunded": "Payment marked as refunded and the invitation unpublished",
+      "reconciled": "Payment status updated from the provider",
+      "upToDate": "Already up to date with the provider",
+      "templateDeleted": "Template deleted.",
+      "markedPaid": "Invitation marked as paid",
+      "invitationDeleted": "Invitation deleted",
+      "occasionAdded": "{{name}} added",
+      "typeAdded": "{{name}} added",
+      "reordered": "Order saved"
+    },
+    "deleteTemplate": "Delete",
+    "deleteTemplateConfirm": "Delete the template \"{{name}}\" permanently? This cannot be undone.",
+    "deleteTemplateInUse": "Used by invitations: deleting is blocked, archive it instead",
+    "preview": "Preview",
+    "notPublished": "Not published yet",
+    "markPaid": "Mark as paid",
+    "confirmMarkPaid": "Mark this invitation as paid? The customer can then publish it without paying.",
+    "paid": "Paid",
+    "unpaid": "Not paid",
+    "deleteInvitation": "Delete",
+    "confirmDeleteInvitation": "Delete this invitation permanently? Its guest list and replies are deleted too. This cannot be undone.",
+    "noInvitations": "This user has no invitations yet.",
+    "expand": "Show invitations",
+    "addOccasion": "Add occasion",
+    "occasionNameEn": "Name (English)",
+    "occasionNameAr": "Name (Arabic)",
+    "occasionSlug": "Link name (english-letters-and-dashes)",
+    "occasionCreate": "Create occasion",
+    "occasionHint": "A new occasion starts empty. Add templates for it from the Templates tab.",
+    "markPaidTitle": "Mark as paid",
+    "choosePackage": "Choose the package to grant",
+    "markPaidNote": "Recorded as a payment of 0 from the admin. The customer can then publish without paying.",
+    "confirmMarkPaidButton": "Mark as paid",
+    "forOwner": "Owner",
+    "invitationCount_one": "{{count}} invitation",
+    "invitationCount_other": "{{count}} invitations",
+    "invitation": "Invitation",
+    "updated": "Updated",
+    "unpublishAction": "Unpublish",
+    "archiveAction": "Archive",
+    "addType": "Add type",
+    "typeCreate": "Add type",
+    "typeNameEn": "Type name (English)",
+    "typeNameAr": "Type name (Arabic)",
+    "typeSlug": "Link name (english-letters-and-dashes)",
+    "noTypes": "No types yet. Add one for this occasion.",
+    "ov": {
+      "newThisWeek_one": "{{count}} new this week",
+      "newThisWeek_other": "{{count}} new this week",
+      "publishedOf": "{{count}} published",
+      "paidInvitations": "Paid invitations",
+      "conversion": "{{percent}}% of all invitations",
+      "last30": "Last 30 days",
+      "guests": "Guests added",
+      "attendees": "{{count}} confirmed attendees",
+      "replies": "Replies received",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "views": "Page views",
+      "templates": "Templates",
+      "premiumCount": "{{count}} premium",
+      "last14": "Last 14 days",
+      "signups": "Sign-ups",
+      "newInvitations": "New invitations",
+      "dailyRevenue": "Revenue",
+      "byStatus": "Invitations by status",
+      "byOccasion": "Invitations by occasion",
+      "topTemplates": "Most used templates",
+      "recentInvitations": "Latest invitations",
+      "viewAll": "View all",
+      "noData": "Nothing here yet."
+    },
+    "dragToReorder": "Drag to reorder",
+    "moveUp": "Move up",
+    "moveDown": "Move down"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The link may have moved or been removed.",
+    "home": "Back to home"
+  },
+  "forbidden": {
+    "title": "Not allowed",
+    "body": "You don't have permission to view this page."
+  },
+  "footer": {
+    "rights": "© {{year}} Daawa. All rights reserved.",
+    "madeIn": "Made with love in Egypt",
+    "product": "Product",
+    "support": "Support",
+    "legal": "Legal",
+    "contact": "Contact",
+    "terms": "Terms of service",
+    "privacy": "Privacy policy",
+    "refund": "Refund policy"
+  },
+  "languages": {
+    "ar": "العربية",
+    "en": "English"
+  },
+  "templates": {
+    "title": "Invitation templates",
+    "subtitle": "Browse designs for every occasion. Pick one and make it yours.",
+    "filter": "Filter by occasion",
+    "all": "All",
+    "premium": "Premium",
+    "empty": "No templates in this category yet.",
+    "error": "Couldn't load templates.",
+    "back": "All templates",
+    "notFound": "Template not found",
+    "useTemplate": "Use this template",
+    "editorSoon": "Editor coming soon",
+    "eyebrow": "The collection",
+    "view": "Preview",
+    "includes": [
+      "Full scrolling invitation page",
+      "Live countdown to the day",
+      "Programme, map and notes",
+      "RSVP and guest list",
+      "Arabic and English",
+      "Your colours and fonts"
+    ]
+  },
+  "samples": {
+    "wedding": {
+      "label": "Together with their families",
+      "title": "Sara & Omar",
+      "occasion": "invite you to their wedding",
+      "date": "Thursday, 12 December 2026",
+      "time": "8:00 PM",
+      "venue": "Al Masa Hotel",
+      "address": "Cairo"
+    },
+    "birthday": {
+      "label": "You're invited",
+      "title": "Layla turns 7",
+      "occasion": "Come celebrate with us",
+      "date": "Friday, 8 May 2026",
+      "time": "5:00 PM",
+      "venue": "Sunny Garden",
+      "address": "Maadi, Cairo"
+    },
+    "engagement-bridal": {
+      "label": "Join us to celebrate",
+      "title": "Nour & Karim",
+      "occasion": "at their engagement party",
+      "date": "Saturday, 20 June 2026",
+      "time": "7:30 PM",
+      "venue": "Palm Hall",
+      "address": "New Cairo"
+    },
+    "graduation": {
+      "label": "Celebrating our graduate",
+      "title": "Ahmed Hassan",
+      "occasion": "Class of 2026 — Faculty of Engineering",
+      "date": "Sunday, 5 July 2026",
+      "time": "6:00 PM",
+      "venue": "University Grand Hall",
+      "address": "Giza"
+    }
+  },
+  "marketing": {
+    "hero": {
+      "eyebrow": "Digital invitation studio",
+      "title": "An invitation worth opening",
+      "subtitle": "Elegant, Arabic-first invitation pages with a countdown, programme, map and RSVP, shared as one private link on WhatsApp.",
+      "primary": "Create your invitation",
+      "secondary": "Browse templates",
+      "points": ["Try free for 48 hours", "Arabic and English", "Replies in one place"]
+    },
+    "categories": {
+      "title": "A design for every occasion",
+      "explore": "Explore designs",
+      "subtypes": "Includes"
+    },
+    "featured": {
+      "title": "Featured designs",
+      "subtitle": "A few favourites to start from.",
+      "all": "See all templates"
+    },
+    "steps": {
+      "title": "From idea to invitation in four steps",
+      "items": [
+        {
+          "title": "Pick a design",
+          "body": "Browse templates made for weddings, birthdays, engagements and graduations."
+        },
+        {
+          "title": "Add your details",
+          "body": "Names, date, venue and a personal message — you see the result as you type."
+        },
+        {
+          "title": "Publish and share",
+          "body": "Pay once to publish, then send your private link on WhatsApp or anywhere else."
+        },
+        {
+          "title": "Track responses",
+          "body": "Guests reply with one tap and you watch the guest list fill up."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Why hosts choose us",
+      "items": [
+        {
+          "title": "Arabic first",
+          "body": "Right-to-left layouts and Arabic typography designed from the start, not translated afterwards."
+        },
+        {
+          "title": "Made for WhatsApp",
+          "body": "One clean link that looks beautiful in every chat and opens instantly on any phone."
+        },
+        {
+          "title": "Guests without apps",
+          "body": "Nobody has to install or sign up. Guests open the link and reply."
+        },
+        {
+          "title": "RSVP in one place",
+          "body": "See who accepted, who declined and how many are coming."
+        },
+        {
+          "title": "Private by default",
+          "body": "Your guest list and phone numbers are visible only to you."
+        },
+        {
+          "title": "Pay once",
+          "body": "A simple one-time price per invitation. No subscription."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Simple, one-time pricing",
+      "subtitle": "Design for free. Pay only when you are ready to publish.",
+      "perInvitation": "per invitation",
+      "upToGuests": "Up to {{count}} guests",
+      "premiumYes": "Includes premium templates",
+      "premiumNo": "Standard templates",
+      "choose": "Start designing",
+      "seeAll": "Compare plans",
+      "error": "Couldn't load prices.",
+      "note": "Prices are shown in Egyptian pounds. Payment opens when payments launch."
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "more": "More questions",
+      "items": [
+        {
+          "q": "Do I pay before I design?",
+          "a": "No. Designing and previewing are free. You pay once when you publish the invitation."
+        },
+        {
+          "q": "How do guests receive the invitation?",
+          "a": "You get a private link. Share it on WhatsApp, SMS or any app — guests open it in their browser."
+        },
+        {
+          "q": "Can guests reply?",
+          "a": "Yes. Each invitation can collect responses, and you see the totals in your dashboard."
+        },
+        {
+          "q": "Can I change the invitation after publishing?",
+          "a": "Yes. You can edit details at any time and the link stays the same."
+        },
+        {
+          "q": "Who can see my guest list?",
+          "a": "Only you. Guest names and phone numbers are never shown publicly."
+        },
+        {
+          "q": "Is the invitation available in English too?",
+          "a": "Yes. Invitations and the whole site work in Arabic and English."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to invite your guests?",
+      "body": "Start designing for free — it takes a few minutes.",
+      "button": "Create your invitation"
+    },
+    "pricingPage": {
+      "includes": "What is included",
+      "items": [
+        "Private shareable link",
+        "Arabic and English",
+        "RSVP tracking",
+        "Edit any time after publishing"
+      ]
+    },
+    "categoryPage": {
+      "notFound": "Occasion not found",
+      "empty": "Designs for this occasion are coming soon.",
+      "back": "All occasions"
+    },
+    "contact": {
+      "title": "Contact and support",
+      "subtitle": "Questions about an invitation, a payment or your account? We are happy to help.",
+      "emailLabel": "Email us",
+      "notConfigured": "Our support email will be published here before launch.",
+      "hours": "We reply within one business day."
+    },
+    "home": {
+      "anatomy": {
+        "eyebrow": "What your guests see",
+        "title": "Not just a card. A complete invitation page.",
+        "subtitle": "Each invitation opens as a beautiful scrolling page with everything your guests need in one place.",
+        "items": [
+          {
+            "title": "A grand welcome",
+            "body": "Names, occasion and date on a framed cover styled by your template."
+          },
+          {
+            "title": "Live countdown",
+            "body": "Guests watch the days, hours and minutes tick down to the big day."
+          },
+          {
+            "title": "All the details",
+            "body": "Date, time and place, clear at a glance."
+          },
+          {
+            "title": "Your story",
+            "body": "Tell how it began, with a personal message from the hosts."
+          },
+          {
+            "title": "Programme of the day",
+            "body": "A timeline so everyone knows what happens and when."
+          },
+          {
+            "title": "Map and directions",
+            "body": "One tap opens the venue in maps."
+          },
+          {
+            "title": "RSVP in seconds",
+            "body": "Guests reply right on the page and you see every answer."
+          },
+          {
+            "title": "Made for WhatsApp",
+            "body": "One private link to send in a chat or a group."
+          }
+        ]
+      },
+      "designs": {
+        "eyebrow": "Designs",
+        "title": "Made for every occasion",
+        "subtitle": "Pick a template for your celebration, then change its colours and fonts to make it yours.",
+        "more": "See all designs"
+      },
+      "tools": {
+        "eyebrow": "After you publish",
+        "title": "Everything you need to host with confidence",
+        "items": [
+          {
+            "title": "Guest list",
+            "body": "Add guests with groups and phone numbers. Only you can see them."
+          },
+          {
+            "title": "Live RSVP tracking",
+            "body": "See who accepted, declined or has not replied, and how many are coming."
+          },
+          {
+            "title": "Share on WhatsApp",
+            "body": "Send your link with a ready message, or copy it anywhere."
+          },
+          {
+            "title": "See who is looking",
+            "body": "Know how many times your invitation was opened."
+          },
+          {
+            "title": "Arabic and English",
+            "body": "Write in either language; the page switches direction by itself."
+          },
+          {
+            "title": "Private by design",
+            "body": "Your guest list and phone numbers are never shown to anyone else."
+          }
+        ]
+      },
+      "steps": {
+        "eyebrow": "How it works"
+      },
+      "pricing": {
+        "eyebrow": "Pricing"
+      },
+      "faq": {
+        "eyebrow": "Questions"
+      }
+    }
+  },
+  "legal": {
+    "draft": "Draft for review. This text is a working draft and must be reviewed by legal counsel before launch.",
+    "updated": "Last updated: {{date}}",
+    "terms": {
+      "title": "Terms of service",
+      "sections": [
+        {
+          "h": "The service",
+          "p": "We provide tools to design, publish and share digital invitations and to collect guest responses."
+        },
+        {
+          "h": "Your account",
+          "p": "You are responsible for your account and for the accuracy of the details you publish. Keep your password private."
+        },
+        {
+          "h": "Your content",
+          "p": "You own the content you create. You allow us to host and display it so that your invitation works. Do not publish unlawful or abusive content."
+        },
+        {
+          "h": "Payments",
+          "p": "Publishing requires a one-time payment at the price shown at checkout. An invitation is published only after payment is confirmed."
+        },
+        {
+          "h": "Availability",
+          "p": "We aim for reliable service but cannot guarantee uninterrupted access."
+        },
+        {
+          "h": "Changes",
+          "p": "We may update these terms and will notify you of material changes."
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "sections": [
+        {
+          "h": "What we collect",
+          "p": "Account details (name, email), the invitations you create, guest names and responses you or your guests enter, and basic technical data needed to operate the service."
+        },
+        {
+          "h": "How we use it",
+          "p": "To run the service, show your invitation to the people you share it with, process payments and keep the platform secure."
+        },
+        {
+          "h": "Guest information",
+          "p": "Guest lists and phone numbers are visible only to the invitation owner and are never shown publicly."
+        },
+        {
+          "h": "Sharing",
+          "p": "We do not sell personal data. We share it only with service providers needed to operate the platform, such as payment and email providers."
+        },
+        {
+          "h": "Your rights",
+          "p": "You can ask us to access, correct or delete your data by contacting support."
+        }
+      ]
+    },
+    "refund": {
+      "title": "Refund policy",
+      "sections": [
+        {
+          "h": "Before publishing",
+          "p": "You are never charged while designing. Payment is requested only when you publish."
+        },
+        {
+          "h": "After publishing",
+          "p": "Refund eligibility and timing are to be confirmed by the business before launch."
+        },
+        {
+          "h": "Payment problems",
+          "p": "If you were charged but your invitation was not published, contact support with your payment reference and we will resolve it."
+        }
+      ]
+    }
+  },
+  "status": {
+    "DRAFT": "Draft",
+    "PENDING_PAYMENT": "Pending payment",
+    "PUBLISHED": "Published",
+    "UNPUBLISHED": "Unpublished",
+    "ARCHIVED": "Archived"
+  },
+  "newInvitation": {
+    "title": "Create an invitation",
+    "subtitle": "Choose a design. You can change it later without losing your details.",
+    "pick": "Select a design above to continue.",
+    "name": "Invitation name",
+    "nameHint": "Only you see this. For example: Sara & Omar wedding.",
+    "subtype": "Type of celebration",
+    "create": "Start designing",
+    "error": "Couldn't create the invitation. Please try again."
+  },
+  "editor": {
+    "notFound": "Invitation not found",
+    "archived": "This invitation is archived. Restore it from your dashboard to edit it.",
+    "backToDashboard": "Back to my invitations",
+    "saveFailed": "Save failed",
+    "conflict": "Changed in another window",
+    "reload": "Reload",
+    "publish": "Publish",
+    "publishSoon": "Publishing arrives with payments",
+    "preview": "Live preview",
+    "mobilePreview": "Phone preview",
+    "desktopPreview": "Wide preview",
+    "readiness": "Needed before publishing",
+    "reset": "Reset",
+    "tabs": {
+      "edit": "Edit",
+      "preview": "Preview"
+    },
+    "sections": {
+      "details": "Event details",
+      "optional": "Optional sections",
+      "design": "Design",
+      "landing": "Landing page"
+    },
+    "fields": {
+      "title": "Invitation name",
+      "hostLine": "Opening line",
+      "headline": "Names or title",
+      "occasionLine": "Occasion line",
+      "date": "Date",
+      "time": "Time",
+      "venueName": "Venue",
+      "venueAddress": "Address",
+      "message": "Personal message",
+      "template": "Template",
+      "accent": "Accent colour",
+      "font": "Headline style",
+      "language": "Invitation language",
+      "story": "Our story",
+      "schedule": "Programme of the day",
+      "scheduleTime": "Time",
+      "scheduleTitle": "What happens",
+      "scheduleRemove": "Remove",
+      "scheduleAdd": "Add an item",
+      "dressCode": "Dress code",
+      "notes": "Notes for guests",
+      "mapUrl": "Map link",
+      "mapUrlHint": "Paste a Google Maps or similar link. Leave empty to search by venue name.",
+      "photo": "Your photo",
+      "photoAdd": "Add a photo",
+      "photoChange": "Change photo",
+      "photoRemove": "Remove",
+      "photoHint": "JPG, PNG or WebP. Shown on this design's cover. A portrait photo of the two of you works best.",
+      "verse": "Verse or quotation",
+      "music": "Background music",
+      "musicAdd": "Add a song (MP3)",
+      "musicChange": "Change song",
+      "musicHint": "MP3, up to 6 MB. Use music you have the right to share. Plays after the guest opens the envelope.",
+      "gallery": "Gallery photos",
+      "galleryAdd": "Add photos ({{count}} left)",
+      "galleryHint": "Up to 6 photos shown in a gallery section.",
+      "galleryLayout": "Gallery layout",
+      "galleryLayouts": {
+        "grid": "Grid",
+        "carousel": "Carousel",
+        "polaroid": "Polaroid"
+      },
+      "verseFont": "Verse font",
+      "storyFont": "Story font"
+    },
+    "toggles": {
+      "time": "Show time",
+      "address": "Show address",
+      "message": "Show message",
+      "countdown": "Show countdown",
+      "story": "Show story",
+      "schedule": "Show programme",
+      "details": "Show dress code and notes",
+      "envelope": "Envelope opening intro",
+      "calendar": "Show calendar",
+      "guestbook": "Show guestbook",
+      "gallery": "Show photo gallery"
+    },
+    "fonts": {
+      "elegant": "Elegant",
+      "modern": "Modern"
+    },
+    "missing": {
+      "headline": "Names or title",
+      "eventDate": "Event date",
+      "venueName": "Venue"
+    },
+    "pageColors": "Page colours",
+    "pageColorsHint": "Premium: change every colour of your page. Try it free, pay only when you publish.",
+    "pageColorsLocked": "Premium only: change every colour of the whole invitation page.",
+    "resize": "Resize the side panel",
+    "resizeHint": "Drag to resize, double-click to reset",
+    "showPreview": "Preview",
+    "backToEditing": "Back to editing",
+    "envelopeStyle": "Envelope style",
+    "envelopeStyles": {
+      "classic": "Classic",
+      "luxe": "Luxe",
+      "floral": "Floral",
+      "minimal": "Minimal",
+      "night": "Night",
+      "curtain": "Stage curtain",
+      "doors": "Grand doors",
+      "hall": "Hall entrance"
+    },
+    "textFonts": {
+      "auto": "Auto",
+      "display": "Display",
+      "script": "Script",
+      "luxe": "Serif",
+      "sans": "Plain",
+      "caps": "Modern"
+    }
+  },
+  "manage": {
+    "unpublish": "Unpublish",
+    "notPublished": "Publish this invitation to get a shareable link and start collecting responses.",
+    "paymentRequired": "Publishing needs a package or the free plan. Choose one below.",
+    "notReady": "Complete these details first:",
+    "publishFailed": "Couldn't publish. Please try again.",
+    "payTitle": "Choose a package to publish",
+    "payBody": "You pay once per invitation. After payment is confirmed the invitation is published automatically.",
+    "payAndPublish": "Pay and publish",
+    "lastFailed": "Your last payment attempt did not go through. You can try again.",
+    "views_one": "Opened {{count}} time",
+    "views_other": "Opened {{count}} times",
+    "premium": {
+      "title": "This invitation uses Premium features",
+      "body": "Choose the Premium package to publish it as designed. Or switch back to a standard design.",
+      "items": {
+        "template": "A premium template",
+        "studio": "Your own poster (Design Studio)",
+        "colors": "Custom page colours"
+      },
+      "remove": "Remove my poster and colours",
+      "changeTemplate": "Choose a standard template"
+    }
+  },
+  "share": {
+    "title": "Share your invitation",
+    "copy": "Copy link",
+    "copied": "Copied",
+    "copyManually": "Copy this link",
+    "open": "Open",
+    "message": "Message",
+    "messageHint": "The link is added after your message.",
+    "whatsapp": "Share on WhatsApp",
+    "native": "Share…",
+    "defaultMessage": "You are invited — {{title}}. Please see the invitation:"
+  },
+  "guests": {
+    "title": "Guest list",
+    "add": "Add guest",
+    "total": "Guests",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "pending": "Pending",
+    "attendees": "People attending",
+    "search": "Search by name",
+    "filterStatus": "Filter by response",
+    "filterGroup": "Filter by group",
+    "allStatuses": "All responses",
+    "allGroups": "All groups",
+    "status": {
+      "ACCEPTED": "Accepted",
+      "DECLINED": "Declined",
+      "PENDING": "Pending"
+    },
+    "name": "Name",
+    "phone": "Phone",
+    "phoneHint": "Optional. Visible only to you.",
+    "group": "Group",
+    "maxAttendees": "Max people",
+    "notes": "Private notes",
+    "notesHint": "Only you can see these.",
+    "response": "Response",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete {{name}} from the guest list?",
+    "cancel": "Cancel",
+    "empty": "No guests yet. Add the people you are inviting to track their responses.",
+    "noMatches": "No guests match these filters.",
+    "error": "Couldn't load the guest list.",
+    "fromInvite": "Replied on the invitation"
+  },
+  "responses": {
+    "title": "Responses",
+    "empty": "No responses yet.",
+    "notOnList": "not on your guest list"
+  },
+  "public": {
+    "notFoundTitle": "Invitation not available",
+    "notFoundBody": "This link may be wrong, or the invitation is no longer published.",
+    "rsvpTitle": "Will you attend?",
+    "deadline": "Please reply by {{date}}",
+    "name": "Your name",
+    "accept": "Joyfully accept",
+    "decline": "Regretfully decline",
+    "attendees": "Number of guests",
+    "message": "Message for the hosts (optional)",
+    "send": "Send reply",
+    "thanksAccepted": "Thank you! We look forward to seeing you.",
+    "thanksDeclined": "Thank you for letting us know.",
+    "recorded": "Your reply has been sent.",
+    "updated": "Your earlier reply has been updated.",
+    "change": "Change my reply",
+    "closed": "Replies are now closed.",
+    "error": "Couldn't send your reply. Please try again.",
+    "madeWith": "Made with love by Invitation 4u"
+  },
+  "editorRsvp": {
+    "title": "Replies (RSVP)",
+    "enabled": "Collect replies",
+    "askAttendees": "Ask how many are coming",
+    "max": "Max people per reply",
+    "deadline": "Reply by",
+    "manage": "Share & guests"
+  },
+  "pay": {
+    "simulated": "Simulated payment gateway",
+    "simulatedBody": "Test environment only. No real money is charged.",
+    "simulatePay": "Simulate successful payment",
+    "simulateFail": "Simulate failed payment",
+    "simulateCancel": "Cancel",
+    "notFound": "Payment not found.",
+    "error": "Something went wrong. Please try again.",
+    "confirming": "Confirming your payment…",
+    "confirmingBody": "This usually takes a few seconds. Please keep this page open.",
+    "stillPending": "Still waiting for confirmation",
+    "stillPendingBody": "The payment provider has not confirmed yet. Your invitation will publish automatically once it does.",
+    "successTitle": "Payment confirmed",
+    "successBody": "Your invitation is published. Share the link with your guests.",
+    "viewInvitation": "Open my invitation",
+    "failedTitle": "Payment did not go through",
+    "failedBody": "You have not been charged. Your invitation is safe as a draft, and you can try again.",
+    "tryAgain": "Try again",
+    "history": "Payment history",
+    "historyTitle": "Payments",
+    "historySubtitle": "Your payments for published invitations.",
+    "empty": "No payments yet.",
+    "col": {
+      "date": "Date",
+      "invitation": "Invitation",
+      "package": "Package",
+      "amount": "Amount",
+      "status": "Status"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "SUCCEEDED": "Paid",
+      "FAILED": "Failed",
+      "CANCELLED": "Cancelled",
+      "REFUNDED": "Refunded"
+    }
+  },
+  "free": {
+    "name": "Free",
+    "price": "0 EGP",
+    "features": "{{hours}} hours online · Daawa watermark · up to {{guests}} guests",
+    "publish": "Publish free for 48 hours",
+    "upgrade": "Upgrade and publish",
+    "upgradeTitle": "Upgrade to keep it online",
+    "upgradeBody": "Pay once to remove the watermark and the 48-hour limit. The same link keeps working.",
+    "unavailable": "Couldn't start the free plan. It can be used once per invitation, a few times per account, and not with premium designs.",
+    "badge": "Free plan",
+    "expiredBadge": "Ended",
+    "expiredTitle": "The free period has ended",
+    "expiredBody": "Guests can no longer open this invitation. Upgrade to bring the same link back online; your guests and replies are kept.",
+    "activeTitle": "Free plan is running",
+    "activeBody": "This invitation stays online until {{date}}, with a watermark.",
+    "ribbon": "Free plan · made with Daawa",
+    "endedTitle": "This invitation has ended",
+    "endedBody": "Its free period is over. Please contact the host."
+  },
+  "landing": {
+    "replyNow": "Reply now",
+    "scroll": "Scroll down",
+    "countdownTitle": "Counting down to the big day",
+    "countdownDone": "The celebration has begun",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "detailsTitle": "The details",
+    "date": "Date",
+    "time": "Time",
+    "place": "Place",
+    "storyTitle": "Our story",
+    "scheduleTitle": "Programme of the day",
+    "venueTitle": "Where to find us",
+    "openMap": "Open in maps",
+    "notesTitle": "Good to know",
+    "dressCode": "Dress code",
+    "notes": "Notes",
+    "envelopeLabel": "You have received an invitation",
+    "openInvitation": "Open the invitation",
+    "calendarTitle": "Save the date",
+    "addToCalendar": "Add to Google Calendar",
+    "downloadIcs": "Download for other calendars",
+    "guestbookTitle": "Guestbook",
+    "guestName": "Your name",
+    "guestMessage": "Write your congratulations",
+    "guestSend": "Send",
+    "guestSent": "Thank you! Your message was added.",
+    "guestEmpty": "Be the first to leave a message",
+    "guestError": "Could not send. Please try again.",
+    "guestCount": "{{count}} messages",
+    "music": "Play or pause the music",
+    "galleryTitle": "Moments",
+    "close": "Close"
+  },
+  "freePricing": {
+    "name": "Free",
+    "price": "Free",
+    "body": "{{hours}} hours online with a watermark, up to {{guests}} guests. Great for trying it out."
+  },
+  "homeDemo": {
+    "wedding": {
+      "story": "We met at university and never stopped talking. Today we begin the next chapter, and we would love you beside us.",
+      "schedule": [
+        {
+          "time": "19:00",
+          "title": "Welcome and photos"
+        },
+        {
+          "time": "20:00",
+          "title": "The couple arrives"
+        },
+        {
+          "time": "21:30",
+          "title": "Dinner"
+        }
+      ],
+      "dressCode": "Formal",
+      "notes": "Free parking in front of the hall."
+    },
+    "birthday": {
+      "story": "Another year, another reason to celebrate. Come for cake, music and a great evening with the people I love.",
+      "schedule": [
+        {
+          "time": "18:00",
+          "title": "Guests arrive"
+        },
+        {
+          "time": "19:00",
+          "title": "Games and music"
+        },
+        {
+          "time": "20:30",
+          "title": "Cake time"
+        }
+      ],
+      "dressCode": "Colourful and comfortable",
+      "notes": "Surprise guests are welcome."
+    },
+    "engagement-bridal": {
+      "story": "A small step for the calendar and a big one for our hearts. Join us as we celebrate our engagement.",
+      "schedule": [
+        {
+          "time": "19:00",
+          "title": "Welcome drinks"
+        },
+        {
+          "time": "20:00",
+          "title": "Exchange of rings"
+        },
+        {
+          "time": "21:00",
+          "title": "Dinner and music"
+        }
+      ],
+      "dressCode": "Smart elegant",
+      "notes": "Please arrive a little early."
+    },
+    "graduation": {
+      "story": "Years of effort, late nights and good friends. Come and celebrate the day it all paid off.",
+      "schedule": [
+        {
+          "time": "17:00",
+          "title": "Photos"
+        },
+        {
+          "time": "18:00",
+          "title": "Celebration begins"
+        },
+        {
+          "time": "19:30",
+          "title": "Dinner"
+        }
+      ],
+      "dressCode": "Smart casual",
+      "notes": "Bring the family."
+    }
+  },
+  "blessings": {
+    "title": "Guestbook messages",
+    "remove": "Delete"
+  },
+  "builder": {
+    "newButton": "New from artwork",
+    "design": "Design",
+    "newTitle": "New artwork template",
+    "editTitle": "Edit artwork template",
+    "basics": "Basics",
+    "nameEn": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "descEn": "Description (English)",
+    "descAr": "Description (Arabic)",
+    "pageColors": "Page colours",
+    "pageColorsHint": "Used for the sections under the poster: countdown, details, calendar, guestbook.",
+    "palette": {
+      "accent": "Accent",
+      "background": "Background",
+      "surface": "Cards",
+      "text": "Text",
+      "muted": "Muted text"
+    },
+    "background": "Poster background",
+    "bgColor": "Colour",
+    "bgImage": "Upload background",
+    "changeImage": "Change image",
+    "remove": "Remove",
+    "photo": "Customer photo",
+    "photoHint": "The window where the customer's own photo appears.",
+    "photoOn": "Show a photo window",
+    "select": "Select to drag",
+    "shape": "Shape",
+    "shapes": {
+      "rect": "Rectangle",
+      "arch": "Arch",
+      "oval": "Oval"
+    },
+    "width": "Width %",
+    "height": "Height %",
+    "fade": "Fade the bottom into the background",
+    "layers": "Artwork layers",
+    "layersHint": "Flowers, frames and other transparent PNGs placed over (or behind) the photo.",
+    "addLayer": "Add image layer",
+    "layer": "Layer {{n}}",
+    "up": "Move up",
+    "down": "Move down",
+    "rotate": "Rotate",
+    "opacity": "Opacity",
+    "flipX": "Flip horizontally",
+    "flipY": "Flip vertically",
+    "behindPhoto": "Behind the photo",
+    "texts": "Text",
+    "textsHint": "Each line shows the invitation's own details in the font you choose.",
+    "addText": "Add a text line",
+    "keys": {
+      "label": "Opening line",
+      "title": "Names (together)",
+      "name1": "First name",
+      "name2": "Second name",
+      "occasion": "Occasion line",
+      "date": "Full date",
+      "weekday": "Weekday",
+      "day": "Day number",
+      "month": "Month",
+      "year": "Year",
+      "time": "Time",
+      "venue": "Venue",
+      "address": "Address"
+    },
+    "fonts": {
+      "script": "Script",
+      "luxe": "Elegant serif",
+      "caps": "Clean caps",
+      "display": "Display",
+      "sans": "Sans"
+    },
+    "weights": {
+      "light": "Light",
+      "regular": "Regular",
+      "bold": "Bold"
+    },
+    "aligns": {
+      "start": "Start",
+      "center": "Centre",
+      "end": "End"
+    },
+    "font": "Font",
+    "weight": "Weight",
+    "align": "Align",
+    "color": "Colour",
+    "size": "Size",
+    "tracking": "Letter spacing",
+    "upper": "Uppercase",
+    "preview": "Live preview",
+    "previewLang": "Preview language",
+    "dragHint": "Select an item, then drag it on the preview. Arabic and English previews show how text flows in each language.",
+    "namesRequired": "Enter the template name in both languages.",
+    "uploadFailed": "Upload failed. Use a PNG, JPG or WebP up to 6 MB.",
+    "saved": "Template saved.",
+    "created": "Template created as a draft. Activate it from the list.",
+    "saveFailed": "Could not save the template."
+  },
+  "studio": {
+    "title": "Design Studio",
+    "backToEditor": "Back to the editor",
+    "useTemplate": "Use the template instead",
+    "startNote": "Design your own poster. Until you change something, your invitation keeps its chosen template.",
+    "activeNote": "Your own design is used for this invitation.",
+    "premiumNote": "Trying it is free. Publishing a custom design needs the Premium package.",
+    "entryTitle": "Design your own poster",
+    "entryHint": "Premium: try it free, pay only when you publish",
+    "entryActive": "Using your own design. Tap to edit.",
+    "sections": {
+      "photo": "Photo",
+      "background": "Background",
+      "artwork": "Artwork",
+      "text": "Text",
+      "colors": "Page colours"
+    },
+    "off": "Off",
+    "withImage": "With an image",
+    "layerCount_one": "{{count}} item",
+    "layerCount_other": "{{count}} items",
+    "textCount_one": "{{count}} line",
+    "textCount_other": "{{count}} lines",
+    "colorsSummary": "Sections under the poster",
+    "library": "Ready-made artwork",
+    "addArt": "Add {{name}}",
+    "tooManyLayers": "You can add up to 16 items.",
+    "horizontal": "Left / right",
+    "vertical": "Up / down",
+    "dragHint": "Pick an item in the sidebar, then drag it on the poster. Use the sliders for exact placement.",
+    "unnamed": "Unnamed",
+    "adminLibrary": "Artwork library",
+    "adminLibraryHint": "Ready-made flowers, frames and corners (transparent PNG) that customers can add in the Design Studio.",
+    "artLabel": "Name",
+    "addToLibrary": "Upload and add",
+    "labelRequired": "Enter a name first.",
+    "artAdded": "Added to the library.",
+    "decorHint": "Decoration for the sections under the poster: a transparent PNG shown in their corners.",
+    "decorAdd": "Upload decoration",
+    "entryLocked": "Premium only. Upgrade to design your own poster.",
+    "upgrade": "Upgrade to Premium",
+    "lockedTitle": "Design Studio is a Premium feature",
+    "lockedBody": "Get the Premium package to draw your own poster and choose every colour of your invitation."
+  },
+  "pricingPlus": {
+    "tryIt": "Try it free",
+    "freeNote": "No card needed. Live for {{hours}} hours.",
+    "startFree": "Start for free",
+    "liveHours": "Live link for {{hours}} hours",
+    "noWatermark": "No watermark",
+    "permanentLink": "Permanent link, edit any time",
+    "premiumTemplates": "Premium templates",
+    "studio": "Design your own poster (Design Studio)",
+    "colors": "Change every colour of the page",
+    "popular": "Most popular",
+    "oneTime": "One-time payment, no subscription",
+    "choosePremium": "Go Premium",
+    "everyPlan": "Everything below is included in every plan",
+    "every": {
+      "envelope": "Envelope-opening intro",
+      "countdown": "Live countdown",
+      "calendar": "Calendar and add-to-calendar",
+      "rsvp": "Guest replies (RSVP)",
+      "guestbook": "Guestbook of congratulations",
+      "gallery": "Photo gallery",
+      "music": "Background music",
+      "bilingual": "Arabic and English"
+    },
+    "trust": {
+      "noSubscription": "Pay once per invitation",
+      "designFree": "Design and preview for free",
+      "secure": "Your guest list stays private"
+    }
+  },
+  "picker": {
+    "pickDate": "Pick a date",
+    "pickTime": "Pick a time",
+    "pickColor": "Pick a colour",
+    "prev": "Previous",
+    "next": "Next",
+    "today": "Today",
+    "clear": "Clear",
+    "done": "Done",
+    "hour": "Hour",
+    "minute": "Minute",
+    "period": "AM / PM",
+    "custom": "Custom colour"
+  }
+}

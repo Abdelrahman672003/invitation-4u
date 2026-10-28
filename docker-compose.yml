@@ -1,0 +1,41 @@
+# Production stack: caddy (HTTPS) -> web (nginx) -> api -> SQLite file on a named volume.
+# `backup` copies the database and uploads to ./backups every day. See docs/deployment.md.
+services:
+  api:
+    build: { context: ., target: api }
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      DATABASE_URL: file:/data/app.db
+      UPLOAD_DIR: /data/uploads
+      # Two proxies sit in front of the API: caddy and nginx.
+      TRUST_PROXY: "2"
+    volumes:
+      - app-data:/data
+    expose: ["4000"]
+  web:
+    build: { context: ., target: web }
+    restart: unless-stopped
+    depends_on: [api]
+    expose: ["80"]
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on: [web]
+    env_file: .env.production
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+  backup:
+    build: { context: ., target: backup }
+    restart: unless-stopped
+    volumes:
+      - app-data:/data
+      - ./backups:/backups
+
+volumes:
+  app-data:
+  caddy-data:
+  caddy-config:

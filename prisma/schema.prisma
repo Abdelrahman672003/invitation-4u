@@ -1,0 +1,383 @@
+// Digital Invitation Platform — SQLite data model.
+// Conventions: UUID primary keys, snake_case tables/columns, UTC timestamps,
+// money in integer minor units + ISO currency code. Extra CHECK constraints
+// live in the migration SQL (Prisma cannot express them).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Enums ----------
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum TemplateStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum InvitationStatus {
+  DRAFT
+  PENDING_PAYMENT
+  PUBLISHED
+  UNPUBLISHED
+  ARCHIVED
+}
+
+enum RsvpResponse {
+  ACCEPTED
+  DECLINED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum WebhookProcessingStatus {
+  RECEIVED
+  PROCESSED
+  IGNORED
+  FAILED
+}
+
+// ---------- Identity ----------
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  /// Always stored lower-cased and trimmed (enforced by a CHECK constraint).
+  email        String   @unique
+  passwordHash String?  @map("password_hash")
+  /// Reserved for future external identity providers.
+  authProvider String?  @map("auth_provider")
+  authSubject  String?  @map("auth_subject")
+  role         Role     @default(CUSTOMER)
+  locale       String   @default("ar")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  sessions       Session[]
+  passwordResets PasswordResetToken[]
+  invitations    Invitation[]
+  payments       Payment[]
+  auditLogs      AuditLog[]
+
+  @@unique([authProvider, authSubject])
+  @@map("users")
+}
+
+model Session {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  /// SHA-256 of the opaque cookie token; the raw token is never stored.
+  tokenHash  String   @unique @map("token_hash")
+  expiresAt  DateTime @map("expires_at")
+  lastSeenAt DateTime @default(now()) @map("last_seen_at")
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  tokenHash String    @unique @map("token_hash")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+// ---------- Catalog ----------
+
+model EventCategory {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  nameEn    String   @map("name_en")
+  nameAr    String   @map("name_ar")
+  enabled   Boolean  @default(true)
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  subtypes    EventSubtype[]
+  templates   Template[]
+  invitations Invitation[]
+
+  @@map("event_categories")
+}
+
+model EventSubtype {
+  id         String   @id @default(uuid())
+  categoryId String   @map("category_id")
+  slug       String
+  nameEn     String   @map("name_en")
+  nameAr     String   @map("name_ar")
+  enabled    Boolean  @default(true)
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  category    EventCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  invitations Invitation[]
+
+  @@unique([categoryId, slug])
+  @@map("event_subtypes")
+}
+
+model Template {
+  id            String         @id @default(uuid())
+  categoryId    String         @map("category_id")
+  slug          String         @unique
+  nameEn        String         @map("name_en")
+  nameAr        String         @map("name_ar")
+  descriptionEn String?        @map("description_en")
+  descriptionAr String?        @map("description_ar")
+  thumbnailUrl  String?        @map("thumbnail_url")
+  /// Validated template configuration (layout, palette, fonts, sections).
+  designConfig  Json           @map("design_config")
+  version       Int            @default(1)
+  status        TemplateStatus @default(DRAFT)
+  isPremium     Boolean        @default(false) @map("is_premium")
+  sortOrder     Int            @default(0) @map("sort_order")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  category    EventCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  invitations Invitation[]
+
+  @@index([categoryId, status])
+  @@map("templates")
+}
+
+// ---------- Invitations ----------
+
+model Invitation {
+  id               String           @id @default(uuid())
+  ownerId          String           @map("owner_id")
+  categoryId       String           @map("category_id")
+  subtypeId        String?          @map("subtype_id")
+  templateId       String           @map("template_id")
+  /// Template version the content was authored against.
+  templateVersion  Int              @map("template_version")
+  /// Immutable copy of the template design captured at publication time,
+  /// so later template edits/archival never break published invitations.
+  templateSnapshot Json?            @map("template_snapshot")
+  title            String
+  /// Permanent public URL segment: /i/:slug. Never changes after creation.
+  slug             String           @unique
+  contentJson      Json             @map("content_json")
+  /// Language of the invitation content ("ar", "en"); direction derives from it.
+  contentLocale    String           @default("ar") @map("content_locale")
+  eventDate        DateTime?        @map("event_date")
+  eventTimezone    String           @default("Africa/Cairo") @map("event_timezone")
+  rsvpDeadline     DateTime?        @map("rsvp_deadline")
+  status           InvitationStatus @default(DRAFT)
+  /// Incremented on each content save; used to reject stale autosaves.
+  revision         Int              @default(0)
+  publishedAt      DateTime?        @map("published_at")
+  unpublishedAt    DateTime?        @map("unpublished_at")
+  archivedAt       DateTime?        @map("archived_at")
+  /// Free-plan end time. Null for paid invitations. Past this instant the public page stops working.
+  expiresAt        DateTime?        @map("expires_at")
+  /// Set when the one free publication of this invitation is used; it cannot be repeated.
+  freeUsedAt       DateTime?        @map("free_used_at")
+  /// Aggregate page opens only: no visitor identifiers are stored.
+  viewCount        Int              @default(0) @map("view_count")
+  lastViewedAt     DateTime?        @map("last_viewed_at")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  owner    User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  category EventCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  subtype  EventSubtype? @relation(fields: [subtypeId], references: [id], onDelete: SetNull)
+  template Template      @relation(fields: [templateId], references: [id], onDelete: Restrict)
+
+  guests   Guest[]
+  rsvps    Rsvp[]
+  blessings Blessing[]
+  payments Payment[]
+
+  @@index([ownerId, status])
+  @@index([ownerId, updatedAt])
+  @@index([status])
+  @@index([templateId])
+  @@map("invitations")
+}
+
+model Guest {
+  id           String   @id @default(uuid())
+  invitationId String   @map("invitation_id")
+  name         String
+  phone        String?
+  groupName    String?  @map("group_name")
+  maxAttendees Int      @default(1) @map("max_attendees")
+  notes        String?
+  /// Reserved for personalized RSVP links (/i/:slug?g=token) in a later release.
+  inviteToken  String?  @unique @map("invite_token")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  rsvps      Rsvp[]
+
+  @@index([invitationId, name])
+  @@index([invitationId, groupName])
+  @@map("guests")
+}
+
+model Rsvp {
+  id             String       @id @default(uuid())
+  invitationId   String       @map("invitation_id")
+  guestId        String?      @map("guest_id")
+  name           String
+  response       RsvpResponse
+  attendeesCount Int          @default(1) @map("attendees_count")
+  message        String?
+  /// Normalized identity used to detect duplicate submissions (rule documented in docs/database.md).
+  dedupeKey      String       @map("dedupe_key")
+  respondedAt    DateTime     @default(now()) @map("responded_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  guest      Guest?     @relation(fields: [guestId], references: [id], onDelete: SetNull)
+
+  @@unique([invitationId, dedupeKey])
+  @@index([invitationId, response])
+  @@index([guestId])
+  @@map("rsvps")
+}
+
+/// A congratulation left by a guest on the invitation's public page. Plain text only.
+model Blessing {
+  id           String   @id @default(uuid())
+  invitationId String   @map("invitation_id")
+  name         String
+  message      String
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, createdAt])
+  @@map("blessings")
+}
+
+/// Ready-made artwork (flowers, frames, corners) admins offer in the Design Studio.
+model ArtAsset {
+  id        String   @id @default(uuid())
+  /// Stored file name under the uploads directory.
+  file      String   @unique
+  label     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("art_assets")
+}
+
+// ---------- Monetization ----------
+
+model Package {
+  id         String   @id @default(uuid())
+  code       String   @unique
+  nameEn     String   @map("name_en")
+  nameAr     String   @map("name_ar")
+  priceMinor Int      @map("price_minor")
+  currency   String   @default("EGP")
+  /// e.g. { "allowsPublish": true, "premiumTemplates": false, "maxGuests": 300 }
+  features   Json
+  enabled    Boolean  @default(true)
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  payments Payment[]
+
+  @@map("packages")
+}
+
+model Payment {
+  id                String        @id @default(uuid())
+  userId            String        @map("user_id")
+  invitationId      String?       @map("invitation_id")
+  packageId         String        @map("package_id")
+  provider          String
+  providerReference String?       @map("provider_reference")
+  /// The gateway's own id of the successful charge; refunds are issued against it.
+  providerTransactionId String?   @map("provider_transaction_id")
+  amountMinor       Int           @map("amount_minor")
+  currency          String
+  status            PaymentStatus @default(PENDING)
+  failureReason     String?       @map("failure_reason")
+  paidAt            DateTime?     @map("paid_at")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  // Financial records are retained: users are anonymized rather than deleted.
+  user       User        @relation(fields: [userId], references: [id], onDelete: Restrict)
+  invitation Invitation? @relation(fields: [invitationId], references: [id], onDelete: SetNull)
+  package    Package     @relation(fields: [packageId], references: [id], onDelete: Restrict)
+
+  @@unique([provider, providerReference])
+  @@index([userId, createdAt])
+  @@index([invitationId])
+  @@index([status])
+  @@map("payments")
+}
+
+model WebhookEvent {
+  id               String                  @id @default(uuid())
+  provider         String
+  externalEventId  String                  @map("external_event_id")
+  eventType        String?                 @map("event_type")
+  payload          Json
+  processingStatus WebhookProcessingStatus @default(RECEIVED) @map("processing_status")
+  error            String?
+  receivedAt       DateTime                @default(now()) @map("received_at")
+  processedAt      DateTime?               @map("processed_at")
+
+  @@unique([provider, externalEventId])
+  @@index([processingStatus])
+  @@map("webhook_events")
+}
+
+// ---------- Audit ----------
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?  @map("actor_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String?  @map("entity_id")
+  metadata   Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId])
+  @@index([actorId, createdAt])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

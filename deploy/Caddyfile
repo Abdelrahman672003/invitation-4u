@@ -1,0 +1,10 @@
+# TLS front door. Caddy gets and renews the certificate for DOMAIN by itself (ports 80 and 443 must
+# be open and DOMAIN's DNS must point at this server), then hands requests to the web container.
+{$DOMAIN} {
+	encode gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+	reverse_proxy web:80
+}
