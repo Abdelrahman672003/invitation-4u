@@ -33,19 +33,31 @@ export function GalleryField({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
 
+  const [pending, setPending] = useState<{ id: number; url: string; fraction: number }[]>([]);
+
   async function pick(files: FileList | null) {
     if (!files || files.length === 0) return;
     setBusy(true);
     setError(false);
     const added: string[] = [];
+    const chosen = Array.from(files).slice(0, MAX - value.length);
+    const tiles = chosen.map((file, id) => ({ id, url: URL.createObjectURL(file), fraction: 0 }));
+    setPending(tiles);
     try {
-      for (const file of Array.from(files).slice(0, MAX - value.length)) {
-        added.push(await uploadPhoto(invitationId, file));
+      for (const [index, file] of chosen.entries()) {
+        added.push(
+          await uploadPhoto(invitationId, file, (fraction) =>
+            setPending((list) => list.map((tile) => (tile.id === index ? { ...tile, fraction } : tile))),
+          ),
+        );
+        setPending((list) => list.filter((tile) => tile.id !== index));
       }
     } catch {
       setError(true);
     } finally {
       if (added.length > 0) onChange([...value, ...added]);
+      tiles.forEach((tile) => URL.revokeObjectURL(tile.url));
+      setPending([]);
       setBusy(false);
       if (input.current) input.current.value = '';
     }
@@ -54,7 +66,7 @@ export function GalleryField({
   return (
     <div className="space-y-2">
       <p className="text-sm font-medium">{t('editor.fields.gallery')}</p>
-      {value.length > 0 && (
+      {(value.length > 0 || pending.length > 0) && (
         <ul className="grid grid-cols-3 gap-2">
           {value.map((name) => (
             <li
@@ -70,6 +82,17 @@ export function GalleryField({
               >
                 <X className="size-3.5" aria-hidden />
               </button>
+            </li>
+          ))}
+          {pending.map((tile) => (
+            <li
+              key={`pending-${tile.id}`}
+              className="relative aspect-square overflow-hidden rounded-xl border border-line"
+            >
+              <img src={tile.url} alt="" className="size-full object-cover opacity-50" />
+              <span className="absolute inset-x-0 bottom-0 bg-black/60 py-0.5 text-center text-xs text-white">
+                {Math.round(tile.fraction * 100)}%
+              </span>
             </li>
           ))}
         </ul>

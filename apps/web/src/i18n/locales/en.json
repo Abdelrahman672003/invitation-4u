@@ -280,6 +280,22 @@
     "deleteInvitation": "Delete",
     "confirmDeleteInvitation": "Delete this invitation permanently? Its guest list and replies are deleted too. This cannot be undone.",
     "noInvitations": "This user has no invitations yet.",
+    "userStats": {
+      "totalPaid": "Total paid",
+      "payments": "Successful payments",
+      "refunded": "Refunded",
+      "totalViews": "Total views",
+      "views": "Views",
+      "guests": "Guests",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "attendees": "Attendees",
+      "blessings": "Blessings",
+      "created": "Created",
+      "published": "Published",
+      "lastViewed": "Last viewed",
+      "freeUntil": "Free until"
+    },
     "expand": "Show invitations",
     "addOccasion": "Add occasion",
     "occasionNameEn": "Name (English)",
@@ -344,7 +360,7 @@
     "body": "You don't have permission to view this page."
   },
   "footer": {
-    "rights": "© {{year}} Daawa. All rights reserved.",
+    "rights": "© {{year}} Invitation 4u. All rights reserved.",
     "madeIn": "Made with love in Egypt",
     "product": "Product",
     "support": "Support",
@@ -426,7 +442,11 @@
       "subtitle": "Elegant, Arabic-first invitation pages with a countdown, programme, map and RSVP, shared as one private link on WhatsApp.",
       "primary": "Create your invitation",
       "secondary": "Browse templates",
-      "points": ["Try free for 48 hours", "Arabic and English", "Replies in one place"]
+      "points": [
+        "Try free for 48 hours",
+        "Arabic and English",
+        "Replies in one place"
+      ]
     },
     "categories": {
       "title": "A design for every occasion",
@@ -651,27 +671,43 @@
       "sections": [
         {
           "h": "The service",
-          "p": "We provide tools to design, publish and share digital invitations and to collect guest responses."
+          "p": "Invitation 4u lets you design digital invitations, publish them as shareable links and collect guest responses and blessings. By using the site or creating an account you agree to these terms."
         },
         {
           "h": "Your account",
-          "p": "You are responsible for your account and for the accuracy of the details you publish. Keep your password private."
+          "p": "Give accurate details. You are responsible for your account, your password and everything done through it. Tell us right away if you suspect unauthorised use."
         },
         {
           "h": "Your content",
-          "p": "You own the content you create. You allow us to host and display it so that your invitation works. Do not publish unlawful or abusive content."
+          "p": "You own the content you upload or write (text, photos, music). You give us a limited licence to host and display it only as needed to run your invitation link. You confirm you have the right to use it and that it does not break the law or anyone's rights. We may take down invitations with abusive or unlawful content."
+        },
+        {
+          "h": "Plans and prices",
+          "p": "You can publish on the free plan (watermarked, limited time) or on a paid plan, paid once per invitation, at the price in Egyptian pounds shown at checkout. There are no subscriptions or automatic renewals. Prices may change; a payment you have completed is never repriced."
         },
         {
           "h": "Payments",
-          "p": "Publishing requires a one-time payment at the price shown at checkout. An invitation is published only after payment is confirmed."
+          "p": "Payments are processed by Lemon Squeezy as the Merchant of Record, which collects payment, issues the receipt and handles applicable taxes. We never store your card details. Your statement may show Lemon Squeezy or our name. A paid invitation is published only after payment is confirmed."
         },
         {
-          "h": "Availability",
-          "p": "We aim for reliable service but cannot guarantee uninterrupted access."
+          "h": "Refunds",
+          "p": "The refund policy on the \"Refund policy\" page is part of these terms."
         },
         {
-          "h": "Changes",
-          "p": "We may update these terms and will notify you of material changes."
+          "h": "Acceptable use",
+          "p": "Do not use the platform for fraud, spam, publishing other people's data without permission, or to attack, disrupt or bypass the limits of the service."
+        },
+        {
+          "h": "Availability and liability",
+          "p": "We aim for reliable service but cannot promise it will be uninterrupted or error free. To the extent the law allows, our liability is limited to the amount you paid for the invitation concerned. Keep your own copy of your event details."
+        },
+        {
+          "h": "Ending",
+          "p": "You can delete your invitation or account at any time. We may suspend or end accounts that break these terms."
+        },
+        {
+          "h": "Changes and contact",
+          "p": "We may update these terms and will tell you about material changes; continuing to use the service means you accept them. Use the Contact page for questions. These terms are governed by the laws of the Arab Republic of Egypt."
         }
       ]
     },
@@ -680,23 +716,39 @@
       "sections": [
         {
           "h": "What we collect",
-          "p": "Account details (name, email), the invitations you create, guest names and responses you or your guests enter, and basic technical data needed to operate the service."
+          "p": "Account details (name, email, a hashed password), the invitations you create including photos and music, guest names and phone numbers you enter, responses and blessings your guests send, a view count per invitation (a number only, no visitor identity), and basic technical data such as server logs to keep the service safe."
         },
         {
           "h": "How we use it",
-          "p": "To run the service, show your invitation to the people you share it with, process payments and keep the platform secure."
+          "p": "To run the service, show your invitation to the people you share the link with, process payments, answer your questions and prevent abuse. We do not use your data for advertising."
         },
         {
           "h": "Guest information",
-          "p": "Guest lists and phone numbers are visible only to the invitation owner and are never shown publicly."
+          "p": "Guest lists and phone numbers are visible only to the invitation owner and are never shown publicly. The public page shows only what you choose to publish, and the names and messages of people who leave blessings may appear in the guestbook."
+        },
+        {
+          "h": "Payments",
+          "p": "Lemon Squeezy processes payments as the Merchant of Record and collects card and billing details under its own policy. We receive only what we need to confirm a payment (status, amount and reference) and never see your card details."
+        },
+        {
+          "h": "Cookies",
+          "p": "We use one essential cookie to keep you signed in. We use no tracking or advertising cookies."
         },
         {
           "h": "Sharing",
-          "p": "We do not sell personal data. We share it only with service providers needed to operate the platform, such as payment and email providers."
+          "p": "We do not sell personal data. We share it only with service providers needed to run the platform, such as payment and hosting providers, or when the law requires it."
+        },
+        {
+          "h": "Retention and deletion",
+          "p": "We keep your data while your account exists. When you delete an invitation or your account its data is deleted, and backups may keep a copy for a short time (about 14 days) before being erased. We may keep payment records for as long as the law requires."
         },
         {
           "h": "Your rights",
-          "p": "You can ask us to access, correct or delete your data by contacting support."
+          "p": "You can ask us to access, correct or delete your data through the Contact page, and we will reply within a reasonable time."
+        },
+        {
+          "h": "Changes",
+          "p": "We may update this policy and will publish the new version on this page."
         }
       ]
     },
@@ -705,15 +757,27 @@
       "sections": [
         {
           "h": "Before publishing",
-          "p": "You are never charged while designing. Payment is requested only when you publish."
+          "p": "Nothing is charged while you design or on the free plan. You pay only when you choose a paid plan and publish."
         },
         {
-          "h": "After publishing",
-          "p": "Refund eligibility and timing are to be confirmed by the business before launch."
+          "h": "Refund within 14 days",
+          "p": "You can ask for a full refund within 14 days of payment, as long as the event date has not passed. Write to us through the Contact page with your account email and the order or receipt number."
         },
         {
-          "h": "Payment problems",
-          "p": "If you were charged but your invitation was not published, contact support with your payment reference and we will resolve it."
+          "h": "After a refund",
+          "p": "When a refund is approved the paid invitation is taken offline and its link stops working. You keep your draft and can use the free plan."
+        },
+        {
+          "h": "When the money arrives",
+          "p": "The refund goes back to the payment method you used, through Lemon Squeezy. It usually appears within 5 to 10 business days depending on your card's bank."
+        },
+        {
+          "h": "Special cases",
+          "p": "If you were charged but your invitation was not published, charged twice, or the service failed because of a problem on our side, we refund in full even after the period above. Contact us with the order reference."
+        },
+        {
+          "h": "Not refundable",
+          "p": "Payments are not refunded after 14 days or after the event date, except in the special cases above."
         }
       ]
     }
@@ -792,7 +856,8 @@
       "music": "Background music",
       "musicAdd": "Add a song (MP3)",
       "musicChange": "Change song",
-      "musicHint": "MP3, up to 6 MB. Use music you have the right to share. Plays after the guest opens the envelope.",
+      "uploading": "Uploading",
+      "musicHint": "MP3, up to 5 MB. Use music you have the right to share. Plays after the guest opens the envelope.",
       "gallery": "Gallery photos",
       "galleryAdd": "Add photos ({{count}} left)",
       "galleryHint": "Up to 6 photos shown in a gallery section.",
@@ -863,6 +928,8 @@
     "payTitle": "Choose a package to publish",
     "payBody": "You pay once per invitation. After payment is confirmed the invitation is published automatically.",
     "payAndPublish": "Pay and publish",
+    "redirectNote": "When you press \"Pay and publish\" you will be taken to our secure payment platform (Lemon Squeezy) to pay, then brought back to our site automatically.",
+    "redirecting": "Taking you to the secure payment platform… please keep this page open.",
     "lastFailed": "Your last payment attempt did not go through. You can try again.",
     "views_one": "Opened {{count}} time",
     "views_other": "Opened {{count}} times",
@@ -888,6 +955,9 @@
     "messageHint": "The link is added after your message.",
     "whatsapp": "Share on WhatsApp",
     "native": "Share…",
+    "greeting": "✨ A special invitation ✨",
+    "inviteLine": "We would love to have you join us for",
+    "callToAction": "Open the invitation and confirm your attendance here 👇",
     "defaultMessage": "You are invited — {{title}}. Please see the invitation:"
   },
   "guests": {
@@ -999,7 +1069,7 @@
   "free": {
     "name": "Free",
     "price": "0 EGP",
-    "features": "{{hours}} hours online · Daawa watermark · up to {{guests}} guests",
+    "features": "{{hours}} hours online · Invitation 4u watermark · up to {{guests}} guests",
     "publish": "Publish free for 48 hours",
     "upgrade": "Upgrade and publish",
     "upgradeTitle": "Upgrade to keep it online",
@@ -1010,8 +1080,9 @@
     "expiredTitle": "The free period has ended",
     "expiredBody": "Guests can no longer open this invitation. Upgrade to bring the same link back online; your guests and replies are kept.",
     "activeTitle": "Free plan is running",
+    "remaining": "{{hours}} h {{minutes}} min left",
     "activeBody": "This invitation stays online until {{date}}, with a watermark.",
-    "ribbon": "Free plan · made with Daawa",
+    "ribbon": "Free plan · made with Invitation 4u",
     "endedTitle": "This invitation has ended",
     "endedBody": "Its free period is over. Please contact the host."
   },

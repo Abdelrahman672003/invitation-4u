@@ -308,6 +308,78 @@ async function presentInvitations(rows: InvitationRow[]) {
   }));
 }
 
+/** One customer in full: what they paid, and for each invitation its payment, views and guest numbers. */
+adminRouter.get('/users/:id/details', async (req, res) => {
+  const id = parseInput(uuid, req.params.id);
+  const [invitations, payments] = await Promise.all([
+    prisma.invitation.findMany({
+      where: { ownerId: id },
+      orderBy: { updatedAt: 'desc' },
+      include: {
+        category: true,
+        owner: { select: { email: true } },
+        _count: { select: { guests: true, blessings: true } },
+        rsvps: { select: { response: true, attendeesCount: true } },
+      },
+    }),
+    prisma.payment.findMany({
+      where: { userId: id },
+      orderBy: { createdAt: 'desc' },
+      include: { package: { select: { nameEn: true, nameAr: true } } },
+    }),
+  ]);
+
+  const totals = new Map<string, number>();
+  let refunded = 0;
+  for (const payment of payments) {
+    if (payment.status === 'SUCCEEDED')
+      totals.set(payment.currency, (totals.get(payment.currency) ?? 0) + payment.amountMinor);
+    if (payment.status === 'REFUNDED') refunded += 1;
+  }
+
+  const data = {
+    paidTotals: [...totals].map(([currency, amountMinor]) => ({ currency, amountMinor })),
+    succeededCount: payments.filter((payment) => payment.status === 'SUCCEEDED').length,
+    refundedCount: refunded,
+    totalViews: invitations.reduce((sum, row) => sum + row.viewCount, 0),
+    invitations: invitations.map((row) => {
+      const mine = payments.filter(
+        (payment) => payment.invitationId === row.id && payment.status === 'SUCCEEDED',
+      );
+      const accepted = row.rsvps.filter((rsvp) => rsvp.response === 'ACCEPTED');
+      return {
+        id: row.id,
+        title: row.title,
+        slug: row.slug,
+        status: row.status,
+        categoryNameEn: row.category.nameEn,
+        categoryNameAr: row.category.nameAr,
+        paid: mine.length > 0,
+        paidAmountMinor: mine.reduce((sum, payment) => sum + payment.amountMinor, 0),
+        currency: mine[0]?.currency ?? null,
+        packageNameEn: mine[0]?.package.nameEn ?? null,
+        packageNameAr: mine[0]?.package.nameAr ?? null,
+        onFreePlan: row.expiresAt !== null,
+        expiresAt: row.expiresAt?.toISOString() ?? null,
+        publishedAt: row.publishedAt?.toISOString() ?? null,
+        createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+        ownerEmail: row.owner.email,
+        categorySlug: row.category.slug,
+        views: row.viewCount,
+        lastViewedAt: row.lastViewedAt?.toISOString() ?? null,
+        guests: row._count.guests,
+        blessings: row._count.blessings,
+        responses: row.rsvps.length,
+        accepted: accepted.length,
+        declined: row.rsvps.length - accepted.length,
+        attendees: accepted.reduce((sum, rsvp) => sum + rsvp.attendeesCount, 0),
+      };
+    }),
+  };
+  res.json({ data });
+});
+
 adminRouter.get('/users/:id/invitations', async (req, res) => {
   const id = parseInput(uuid, req.params.id);
   const rows = await prisma.invitation.findMany({

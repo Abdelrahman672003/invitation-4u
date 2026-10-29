@@ -13,7 +13,7 @@ import { createRateLimiter } from '../../middleware/security.js';
 export const MAX_PHOTO_BYTES = 3 * 1024 * 1024;
 const NAME = /^[a-f0-9]{32}\.(jpg|png|webp|mp3)$/;
 /** Largest accepted background-music file. */
-export const MAX_MUSIC_BYTES = 6 * 1024 * 1024;
+export const MAX_MUSIC_BYTES = 5 * 1024 * 1024;
 
 /** The file type is decided from the bytes, never from the client's header or file name. */
 function detectType(buffer: Buffer): 'jpg' | 'png' | 'webp' | null {

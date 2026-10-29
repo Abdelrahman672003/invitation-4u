@@ -883,9 +883,9 @@ export function InvitationLanding({
           </div>
           <p className={cn('relative mt-4 text-2xl', titleFont)}>{text.title}</p>
           <p className="relative mt-6 text-xs opacity-70">
-            <Link to="/" className="hover:underline">
+            <a href="/" target="_blank" rel="noopener" className="hover:underline">
               {t('public.madeWith')}
-            </Link>
+            </a>
           </p>
         </footer>
         {!embedded && rsvp && (

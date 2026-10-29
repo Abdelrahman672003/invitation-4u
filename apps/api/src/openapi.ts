@@ -567,7 +567,7 @@ export function buildOpenApiDocument() {
   return {
     openapi: '3.1.0',
     info: {
-      title: 'Daawa API',
+      title: 'Invitation 4u API',
       version: '1.0.0',
       description:
         'JSON API for the digital invitation platform. Authentication is an HttpOnly session cookie; ' +
