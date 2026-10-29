@@ -1,12 +1,24 @@
 import type { ReactNode } from 'react';
-import { ArrowRight, Check, Sparkles } from 'lucide-react';
+import {
+  ArrowRight,
+  Check,
+  CircleHelp,
+  Clock,
+  Mail,
+  MessageCircle,
+  Share2,
+  Sparkles,
+  Tag,
+  Undo2,
+} from 'lucide-react';
 import { Link, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { SocialLinks } from '@/components/ui/SocialLinks';
 import { SOCIAL_LINKS } from '@/lib/social';
+import { SUPPORT_EMAIL, SUPPORT_WHATSAPP } from '@/lib/contact';
+import { cn } from '@/lib/cn';
 import { localized } from '@invite/shared';
 import { ButtonLink } from '@/components/ui/Button';
-import { Alert } from '@/components/ui/Card';
 import { useCategories } from '@/features/categories/api';
 import { CtaBand, FaqList, PricingCards } from '@/features/marketing/sections';
 import {
@@ -263,36 +275,114 @@ export function CategoryPage() {
 
 export function ContactPage() {
   const { t } = useTranslation();
-  const email = import.meta.env.VITE_SUPPORT_EMAIL as string | undefined;
+  const whatsappHref = SUPPORT_WHATSAPP
+    ? `https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent(t('marketing.contact.whatsapp.prefill'))}`
+    : '';
+  const tips = t('marketing.contact.tips.items', { returnObjects: true }) as string[];
+  const channelClass =
+    'group flex flex-col rounded-card border border-line bg-surface p-6 shadow-soft transition-all hover:-translate-y-1 hover:border-brand-300 hover:shadow-lift';
+  const iconClass =
+    'grid size-12 place-items-center rounded-full bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-700 group-hover:text-white';
+  const helpLinks = [
+    { to: '/#faq', icon: CircleHelp, label: t('marketing.contact.help.faq') },
+    { to: '/refund-policy', icon: Undo2, label: t('marketing.contact.help.refund') },
+    { to: '/#pricing', icon: Tag, label: t('marketing.contact.help.pricing') },
+  ];
+
   return (
-    <Page title={t('marketing.contact.title')} subtitle={t('marketing.contact.subtitle')}>
-      <div className="max-w-xl rounded-card border border-line bg-surface p-6 shadow-soft">
-        {email ? (
-          <>
-            <p className="text-sm text-muted">{t('marketing.contact.emailLabel')}</p>
-            <a
-              href={`mailto:${email}`}
-              className="mt-1 block text-lg font-medium text-brand-700 hover:underline"
-              dir="ltr"
-            >
-              {email}
-            </a>
-          </>
-        ) : (
-          <Alert tone="info">{t('marketing.contact.notConfigured')}</Alert>
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <header className="mx-auto max-w-2xl text-center">
+        <p className="text-sm font-medium text-brand-700">{t('marketing.contact.eyebrow')}</p>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{t('marketing.contact.title')}</h1>
+        <p className="mt-3 text-ink-soft">{t('marketing.contact.subtitle')}</p>
+        <p className="mt-5 inline-flex items-center gap-2 rounded-full bg-success-50 px-4 py-1.5 text-sm font-medium text-success-700">
+          <Clock className="size-4" aria-hidden />
+          {t('marketing.contact.hours')}
+        </p>
+      </header>
+
+      <div className="mt-10 grid gap-5 md:grid-cols-3">
+        {whatsappHref && (
+          <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className={channelClass}>
+            <span className={iconClass}>
+              <MessageCircle className="size-6" aria-hidden />
+            </span>
+            <h2 className="mt-4 text-lg font-semibold">{t('marketing.contact.whatsapp.title')}</h2>
+            <p className="mt-1 flex-1 text-sm text-ink-soft">
+              {t('marketing.contact.whatsapp.body')}
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700">
+              {t('marketing.contact.whatsapp.cta')}
+              <ArrowRight className="size-4 rtl:-scale-x-100" aria-hidden />
+            </span>
+          </a>
         )}
-        <p className="mt-4 text-sm text-ink-soft">{t('marketing.contact.hours')}</p>
+        {SUPPORT_EMAIL && (
+          <a href={`mailto:${SUPPORT_EMAIL}`} className={channelClass}>
+            <span className={iconClass}>
+              <Mail className="size-6" aria-hidden />
+            </span>
+            <h2 className="mt-4 text-lg font-semibold">{t('marketing.contact.emailLabel')}</h2>
+            <p className="mt-1 flex-1 text-sm text-ink-soft">{t('marketing.contact.emailBody')}</p>
+            <span className="mt-4 text-sm font-medium text-brand-700" dir="ltr">
+              {SUPPORT_EMAIL}
+            </span>
+          </a>
+        )}
         {SOCIAL_LINKS.length > 0 && (
-          <div className="mt-6 border-t border-line pt-5">
-            <p className="mb-3 text-sm text-muted">{t('marketing.contact.follow')}</p>
+          <div className={cn(channelClass, 'hover:translate-y-0')}>
+            <span className={iconClass}>
+              <Share2 className="size-6" aria-hidden />
+            </span>
+            <h2 className="mt-4 text-lg font-semibold">{t('marketing.contact.follow')}</h2>
+            <p className="mt-1 flex-1 text-sm text-ink-soft">
+              {t('marketing.contact.socialBody')}
+            </p>
             <SocialLinks
+              className="mt-4"
               size="size-5"
               linkClassName="size-11 rounded-full bg-sunken text-ink-soft hover:bg-brand-50 hover:text-brand-700"
             />
           </div>
         )}
+        {!whatsappHref && !SUPPORT_EMAIL && SOCIAL_LINKS.length === 0 && (
+          <div className="rounded-card border border-dashed border-line-strong p-6 text-center text-ink-soft md:col-span-3">
+            {t('marketing.contact.soon')}
+          </div>
+        )}
       </div>
-    </Page>
+
+      <div className="mt-12 grid gap-8 md:grid-cols-2">
+        <section className="rounded-card border border-line bg-surface p-6">
+          <h2 className="text-lg font-semibold">{t('marketing.contact.help.title')}</h2>
+          <ul className="mt-4 space-y-2">
+            {helpLinks.map(({ to, icon: Icon, label }) => (
+              <li key={to}>
+                <Link
+                  to={to}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft transition-colors hover:bg-sunken hover:text-ink"
+                >
+                  <Icon className="size-5 text-brand-700" aria-hidden />
+                  <span className="flex-1">{label}</span>
+                  <ArrowRight className="size-4 rtl:-scale-x-100" aria-hidden />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section className="rounded-card border border-line bg-surface p-6">
+          <h2 className="text-lg font-semibold">{t('marketing.contact.tips.title')}</h2>
+          <ul className="mt-4 space-y-2.5 text-sm text-ink-soft">
+            {tips.map((tip) => (
+              <li key={tip} className="flex gap-2.5">
+                <Check className="mt-0.5 size-4 shrink-0 text-success-600" aria-hidden />
+                {tip}
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </div>
   );
 }
 
