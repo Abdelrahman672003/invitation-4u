@@ -32,12 +32,16 @@ The stack is named `invite`, so the volumes are `invite_db-data`, `invite_app-da
 
 - A small Linux server (1 GB RAM is enough to start) with Docker, the Compose plugin and `git`.
 - Its public IP address (or a domain pointing at it), and port 80 open.
-- A **live-mode** Lemon Squeezy store with its own product, API key and webhook (the test ones do not carry over).
+- A Lemon Squeezy store with its product, API key and webhook. The first deploy uses **test mode**
+  (the same store as development, but a webhook that points at the server); going live later means
+  swapping in the live-mode values, because test and live keys, variants and webhooks are separate.
+- The domain (`invitation-4u.com`) pointing at the server, with HTTPS provided in front of it
+  (for example Cloudflare). Branch `production` is the one the server pulls: `git clone -b production <repository> invite`.
 
 ## First deploy
 
 ```bash
-git clone <repository> invite && cd invite
+git clone -b production <repository> invite && cd invite
 cp .env.production.example .env.production   # fill every value, see the comments inside
 openssl rand -hex 24                          # run twice: MYSQL_ROOT_PASSWORD and MYSQL_PASSWORD
 # MYSQL_PASSWORD must also be pasted into DATABASE_URL (hex has no characters that need escaping)
@@ -59,16 +63,19 @@ docker compose exec -e ADMIN_EMAIL=you@example.com -e ADMIN_PASSWORD='change-me-
 
 Open `http://<server address>/health` (should answer `ok`) and sign in as the administrator.
 
-## Payments (Lemon Squeezy, live)
+## Payments (Lemon Squeezy, test mode first)
 
-1. Activate the store (Lemon Squeezy asks for payout and identity details). Confirm Egypt is a supported payout country.
-2. Create the product and one variant; copy the store id and variant id.
-3. Settings → API: create a key. Settings → Webhooks: add `<APP_URL>/api/v1/webhooks/payments/lemonsqueezy`
+1. With Lemon Squeezy's **Test mode** switched on, take the store id, a variant id and an API key (Settings → API).
+2. Settings → Webhooks (test mode): add `https://invitation-4u.com/api/v1/webhooks/payments/lemonsqueezy`
    with a signing secret of at most 40 characters, events `order_created` and `order_refunded`.
-   Lemon Squeezy may refuse a plain-`http` address or a bare IP for webhooks; if it does, the site needs
-   a domain with HTTPS in front of it (see above) before payments can be confirmed automatically.
-4. Put the four values in `.env.production`, then `docker compose up -d api`.
-5. Make one real purchase with your own card, check the invitation publishes, refund it from the admin panel, and check it goes offline.
+   A plain-`http` address or a bare IP may be refused, which is why the domain with HTTPS is needed.
+3. Put the four values in `.env.production`, then `docker compose up -d api`.
+4. Pay with the test card `4242 4242 4242 4242`, check the invitation publishes, refund it from the
+   admin panel, and check it goes offline.
+
+To go live: activate the store (payout and identity details; confirm Egypt is a supported payout
+country), create the live product and variant, a live API key and a live webhook, replace the four
+values in `.env.production` and run `docker compose up -d api`. Then repeat step 4 with a real card.
 
 Details and assumptions to verify are in `docs/payments.md`. Receipts and refund notices are sent to
 the customer by Lemon Squeezy itself.
