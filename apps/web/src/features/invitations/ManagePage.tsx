@@ -1,4 +1,5 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import i18n from 'i18next';
 import { ArrowLeft, Copy, Crown, Pencil, Plus, Share2, Trash2, Users } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -153,6 +154,7 @@ function Manage({ invitation }: { invitation: InvitationDto }) {
               timeStyle: 'short',
             }),
           })}
+          <FreePlanBar expiresAt={invitation.expiresAt} />
         </Alert>
       )}
       {published && !invitation.expired && <SharePanel invitation={invitation} />}
@@ -205,8 +207,7 @@ function PublishPanel({
         baseRevision: invitation.revision,
         content: {
           ...invitation.content,
-          design: { ...invitation.content.design, studio: undefined, colors: undefined },
-        },
+          design: { ...invitation.content.design, studio: undefined, colors: undefined },        },
       }),
     onSuccess: (saved) => {
       client.setQueryData(['invitation', invitation.id], saved);
@@ -303,6 +304,9 @@ function PublishPanel({
           )}
         </Alert>
       )}
+      {(checkout.isPending || checkout.isSuccess) && (
+        <Alert tone="info" title={t('manage.redirecting')} />
+      )}
       <div className="grid gap-4 md:grid-cols-3">
         {freeAvailable && (
           <div className="flex flex-col gap-3 rounded-card border border-dashed border-line-strong p-5">
@@ -352,16 +356,67 @@ function PublishPanel({
           </div>
         ))}
       </div>
+      <p className="text-xs text-ink-soft">{t('manage.redirectNote')}</p>
     </Card>
   );
+}
+
+/** A bar that fills as the free plan's time runs out, with the time that is left. */
+function FreePlanBar({ expiresAt }: { expiresAt: string }) {
+  const { t } = useTranslation();
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
+  const end = new Date(expiresAt).getTime();
+  const total = FREE_PLAN.durationHours * 3_600_000;
+  const left = Math.max(0, end - now);
+  const used = Math.min(100, Math.max(0, ((total - left) / total) * 100));
+  const minutes = Math.floor(left / 60_000);
+  return (
+    <div className="mt-3">
+      <div
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(used)}
+        className="h-2 overflow-hidden rounded-full bg-sunken"
+      >
+        <div
+          className="h-full rounded-full bg-brand-600 transition-[width] duration-700"
+          style={{ width: `${used}%` }}
+        />
+      </div>
+      <p className="mt-1.5 text-xs text-ink-soft">
+        {t('free.remaining', { hours: Math.floor(minutes / 60), minutes: minutes % 60 })}
+      </p>
+    </div>
+  );
+}
+
+/** The ready-made WhatsApp text: a greeting, the event details that exist, and a call to open the link. */
+function defaultShareMessage(invitation: InvitationDto) {
+  const t = i18n.getFixedT(invitation.contentLocale);
+  const { content } = invitation;
+  const lines = [
+    t('share.greeting'),
+    '',
+    t('share.inviteLine'),
+    `*${content.headline || invitation.title}*`,
+    content.occasionLine,
+    '',
+    t('share.callToAction'),
+  ];
+  return lines
+    .filter((line, index, all) => !(line === '' && (index === 0 || all[index - 1] === '')))
+    .join('\n');
 }
 
 function SharePanel({ invitation }: { invitation: InvitationDto }) {
   const { t } = useTranslation();
   const url = publicUrl(invitation.slug);
-  const [message, setMessage] = useState(() =>
-    t('share.defaultMessage', { title: invitation.content.headline || invitation.title }),
-  );
+  const [message, setMessage] = useState(() => defaultShareMessage(invitation));
   const [copied, setCopied] = useState(false);
   const full = `${message}\n${url}`;
   const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
@@ -401,8 +456,8 @@ function SharePanel({ invitation }: { invitation: InvitationDto }) {
           <textarea
             id={p.id}
             aria-describedby={p['aria-describedby']}
-            rows={2}
-            maxLength={300}
+            rows={9}
+            maxLength={600}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="block w-full rounded-(--radius-field) border border-line-strong bg-surface px-4 py-3 shadow-field"

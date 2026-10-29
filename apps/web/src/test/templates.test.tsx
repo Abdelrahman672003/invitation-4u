@@ -85,10 +85,10 @@ describe('marketing pages', () => {
     body: { error: { code: 'UNAUTHENTICATED', message: 'x' } },
   });
 
-  it('renders the legal draft notice', async () => {
+  it('renders the terms with its sections', async () => {
     mockFetch(offline);
     renderRoutes(routes, '/terms');
-    expect(await screen.findByRole('status')).toBeInTheDocument();
+    expect(await screen.findAllByRole('heading', { level: 2 })).not.toHaveLength(0);
   });
 
   it('renders the FAQ as expandable questions', async () => {

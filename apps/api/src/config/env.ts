@@ -68,7 +68,7 @@ const envSchema = z.object({
   UPLOAD_DIR: z.string().default('./uploads'),
   TRUST_PROXY: z.coerce.number().int().min(0).default(0),
   EMAIL_PROVIDER: z.enum(['console']).default('console'),
-  EMAIL_FROM: z.string().default('Daawa <no-reply@example.com>'),
+  EMAIL_FROM: z.string().default('Invitation 4u <no-reply@example.com>'),
 });
 
 const parsed = envSchema.safeParse(process.env);

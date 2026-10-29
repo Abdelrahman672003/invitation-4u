@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  API_BASE_PATH,
   invitationContentSchema,
   publicBlessingSchema,
   publicRsvpSchema,
@@ -7,6 +8,7 @@ import {
   templateDesignSchema,
   type PublicInvitationDto,
 } from '@invite/shared';
+import { env } from '../../config/env.js';
 import { AppError, notFound, parseInput } from '../../lib/errors.js';
 import { isLive } from '../../lib/free-plan.js';
 import { prisma } from '../../lib/prisma.js';
@@ -60,6 +62,54 @@ publicRouter.get('/invitations/:slug', async (req, res) => {
   };
   res.set('Cache-Control', 'no-cache');
   res.json({ data });
+});
+
+const escapeHtml = (value: string) =>
+  value.replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
+
+/**
+ * Link preview for chat apps. WhatsApp and similar crawlers do not run scripts, so the web server
+ * sends them here instead of to the single-page app. People never see this page; it only carries
+ * the title, a short description and a picture for the preview card.
+ */
+publicRouter.get('/share/:slug', async (req, res) => {
+  const base = env.APP_URL.replace(/\/$/, '');
+  let title = 'دعوة — دعوات رقمية أنيقة';
+  let description = 'لديك دعوة جديدة، افتحها من هنا.';
+  let image = `${base}/og-default.png`;
+  let locale = 'ar';
+  try {
+    const row = await findPublished(String(req.params.slug));
+    const content = invitationContentSchema.parse(row.contentJson);
+    locale = row.contentLocale === 'en' ? 'en' : 'ar';
+    title = content.headline || content.hostLine || title;
+    description =
+      [content.occasionLine, content.venueName].filter(Boolean).join(' · ') ||
+      (locale === 'en' ? 'You are invited. Open the invitation.' : description);
+    const picture = content.photo || content.gallery[0];
+    if (picture) image = `${base}${API_BASE_PATH}/media/${picture}`;
+  } catch {
+    // Missing or ended invitations still get a neutral card.
+  }
+  const url = `${base}/i/${encodeURIComponent(String(req.params.slug))}`;
+  res.set('Cache-Control', 'public, max-age=300');
+  res.type('html').send(`<!doctype html>
+<html lang="${locale}">
+<head>
+<meta charset="UTF-8" />
+<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeHtml(description)}" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="دعوة" />
+<meta property="og:title" content="${escapeHtml(title)}" />
+<meta property="og:description" content="${escapeHtml(description)}" />
+<meta property="og:image" content="${escapeHtml(image)}" />
+<meta property="og:url" content="${escapeHtml(url)}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta http-equiv="refresh" content="0;url=${escapeHtml(url)}" />
+</head>
+<body></body>
+</html>`);
 });
 
 /**

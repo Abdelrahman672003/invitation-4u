@@ -1,7 +1,7 @@
-# Daawa (دعوة) — Digital Invitation Platform
+# Invitation 4u (دعوة) — Digital Invitation Platform
 
 Arabic-first platform for creating, publishing and sharing digital invitations, with guest RSVP management.
-"Daawa" is a working name; the brand strings live in `apps/web/src/i18n/locales/*.json`.
+"Invitation 4u" is a working name; the brand strings live in `apps/web/src/i18n/locales/*.json`.
 
 ## Stack
 

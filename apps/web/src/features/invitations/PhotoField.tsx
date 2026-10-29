@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { ImagePlus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
+import { UploadBar } from '@/components/ui/UploadBar';
 import { mediaUrl, uploadPhoto } from '@/lib/media';
 
 /** Lets the customer add, replace or remove the photo a poster-style template shows. */
@@ -19,16 +20,24 @@ export function PhotoField({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
 
+  const [progress, setProgress] = useState(0);
+  const [preview, setPreview] = useState<string>();
+
   async function pick(file: File | undefined) {
     if (!file) return;
     setBusy(true);
     setError(false);
+    setProgress(0);
+    const local = URL.createObjectURL(file);
+    setPreview(local);
     try {
-      onChange(await uploadPhoto(invitationId, file));
+      onChange(await uploadPhoto(invitationId, file, setProgress));
     } catch {
       setError(true);
     } finally {
       setBusy(false);
+      setPreview(undefined);
+      URL.revokeObjectURL(local);
       if (input.current) input.current.value = '';
     }
   }
@@ -38,7 +47,9 @@ export function PhotoField({
       <p className="text-sm font-medium">{t('editor.fields.photo')}</p>
       <div className="flex items-center gap-4">
         <div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-xl border border-line bg-sunken text-ink-soft">
-          {value ? (
+          {preview ? (
+            <img src={preview} alt="" className="size-full object-cover opacity-60" />
+          ) : value ? (
             <img src={mediaUrl(value)} alt="" className="size-full object-cover" />
           ) : (
             <ImagePlus className="size-6" aria-hidden />
@@ -75,6 +86,7 @@ export function PhotoField({
           onChange={(e) => void pick(e.target.files?.[0])}
         />
       </div>
+      {busy && <UploadBar fraction={progress} label={t('editor.fields.uploading')} />}
       <p className="text-xs text-ink-soft">{t('editor.fields.photoHint')}</p>
       {error && (
         <p role="alert" className="text-sm text-danger-600">

@@ -291,8 +291,7 @@ export function LegalPage({ doc }: { doc: 'terms' | 'privacy' | 'refund' }) {
   return (
     <Page title={t(`legal.${doc}.title`)}>
       <div className="max-w-3xl">
-        <Alert tone="warning">{t('legal.draft')}</Alert>
-        <div className="mt-8 space-y-6">
+        <div className="space-y-6">
           {sections.map((section) => (
             <section key={section.h}>
               <h2 className="text-lg font-semibold">{section.h}</h2>

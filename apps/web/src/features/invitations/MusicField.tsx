@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { Music, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
+import { UploadBar } from '@/components/ui/UploadBar';
 import { mediaUrl, uploadMusic } from '@/lib/media';
 
 /** Lets the customer add or remove a background music track (mp3). */
@@ -17,14 +18,16 @@ export function MusicField({
   const { t } = useTranslation();
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState(false);
 
   async function pick(file: File | undefined) {
     if (!file) return;
     setBusy(true);
     setError(false);
+    setProgress(0);
     try {
-      onChange(await uploadMusic(invitationId, file));
+      onChange(await uploadMusic(invitationId, file, setProgress));
     } catch {
       setError(true);
     } finally {
@@ -68,6 +71,7 @@ export function MusicField({
           onChange={(e) => void pick(e.target.files?.[0])}
         />
       </div>
+      {busy && <UploadBar fraction={progress} label={t('editor.fields.uploading')} />}
       <p className="text-xs text-ink-soft">{t('editor.fields.musicHint')}</p>
       {error && (
         <p role="alert" className="text-sm text-danger-600">

@@ -200,7 +200,7 @@ const MESSAGES = {
     ar: (p: EmailFacts) =>
       `تم استلام دفعتك بنجاح.\n\nالدعوة: ${p.invitation}\nالباقة: ${p.package}\nالمبلغ: ${p.amount}\nرقم العملية: ${p.id}\n\nشكرًا لاستخدامك دعوة.`,
     en: (p: EmailFacts) =>
-      `Your payment was received.\n\nInvitation: ${p.invitation}\nPackage: ${p.package}\nAmount: ${p.amount}\nReference: ${p.id}\n\nThank you for using Daawa.`,
+      `Your payment was received.\n\nInvitation: ${p.invitation}\nPackage: ${p.package}\nAmount: ${p.amount}\nReference: ${p.id}\n\nThank you for using Invitation 4u.`,
     subject: { ar: 'إيصال الدفع', en: 'Payment receipt' },
   },
   refund: {

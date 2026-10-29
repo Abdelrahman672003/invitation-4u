@@ -247,35 +247,128 @@ function UserRow({
   );
 }
 
+interface UserInvitationDetails extends AdminInvitation {
+  categoryNameEn: string;
+  categoryNameAr: string;
+  paidAmountMinor: number;
+  currency: string | null;
+  packageNameEn: string | null;
+  packageNameAr: string | null;
+  onFreePlan: boolean;
+  expiresAt: string | null;
+  publishedAt: string | null;
+  createdAt: string;
+  views: number;
+  lastViewedAt: string | null;
+  guests: number;
+  blessings: number;
+  responses: number;
+  accepted: number;
+  declined: number;
+  attendees: number;
+}
+
+interface UserDetails {
+  paidTotals: { currency: string; amountMinor: number }[];
+  succeededCount: number;
+  refundedCount: number;
+  totalViews: number;
+  invitations: UserInvitationDetails[];
+}
+
+function StatBox({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div className="rounded-lg bg-sunken px-3 py-2">
+      <p className="text-base font-semibold">{value}</p>
+      <p className="text-xs text-ink-soft">{label}</p>
+    </div>
+  );
+}
+
 function UserInvitations({ userId }: { userId: string }) {
   const { t } = useTranslation();
-  const items = useAdminList<AdminInvitation>(`users/${userId}/invitations`);
-  if (items.isPending) return <p className="text-sm text-ink-soft">…</p>;
-  if (!items.data?.length)
+  const locale = currentLocale();
+  const details = useQuery({
+    queryKey: ['admin', `users/${userId}/details`],
+    queryFn: async () => (await api<{ data: UserDetails }>(`/admin/users/${userId}/details`)).data,
+  });
+  if (details.isPending) return <p className="text-sm text-ink-soft">…</p>;
+  const data = details.data;
+  if (!data?.invitations.length)
     return <p className="text-sm text-ink-soft">{t('admin.noInvitations')}</p>;
   return (
-    <ul className="space-y-2">
-      {items.data.map((item) => (
-        <li
-          key={item.id}
-          className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3"
-        >
-          <div className="min-w-0">
-            <p className="truncate font-medium">{item.title}</p>
-            <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-ink-soft">
-              <Badge tone={item.status === 'PUBLISHED' ? 'success' : 'neutral'}>
-                {t(`status.${item.status}`)}
-              </Badge>
-              <Badge tone={item.paid ? 'brand' : 'neutral'}>
-                {t(item.paid ? 'admin.paid' : 'admin.unpaid')}
-              </Badge>
-              <span>{formatDate(item.updatedAt, currentLocale())}</span>
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <StatBox
+          label={t('admin.userStats.totalPaid')}
+          value={
+            data.paidTotals.length > 0
+              ? data.paidTotals
+                  .map((total) => formatMoney(total.amountMinor, total.currency, locale))
+                  .join(' + ')
+              : formatMoney(0, 'EGP', locale)
+          }
+        />
+        <StatBox label={t('admin.userStats.payments')} value={data.succeededCount} />
+        <StatBox label={t('admin.userStats.refunded')} value={data.refundedCount} />
+        <StatBox label={t('admin.userStats.totalViews')} value={data.totalViews} />
+      </div>
+      <ul className="space-y-2">
+        {data.invitations.map((item) => (
+          <li key={item.id} className="rounded-xl border border-line bg-surface px-4 py-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate font-medium">{item.title}</p>
+                <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-ink-soft">
+                  <Badge tone={item.status === 'PUBLISHED' ? 'success' : 'neutral'}>
+                    {t(`status.${item.status}`)}
+                  </Badge>
+                  <Badge tone={item.paid ? 'brand' : 'neutral'}>
+                    {item.paid
+                      ? `${t('admin.paid')} · ${formatMoney(item.paidAmountMinor, item.currency ?? 'EGP', locale)}`
+                      : t(item.onFreePlan ? 'free.badge' : 'admin.unpaid')}
+                  </Badge>
+                  {item.paid && (
+                    <span>{locale === 'ar' ? item.packageNameAr : item.packageNameEn}</span>
+                  )}
+                  <span>{locale === 'ar' ? item.categoryNameAr : item.categoryNameEn}</span>
+                  <span>{formatDate(item.updatedAt, locale)}</span>
+                </p>
+              </div>
+              <InvitationActions item={item} />
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-6">
+              <StatBox label={t('admin.userStats.views')} value={item.views} />
+              <StatBox label={t('admin.userStats.guests')} value={item.guests} />
+              <StatBox label={t('admin.userStats.accepted')} value={item.accepted} />
+              <StatBox label={t('admin.userStats.declined')} value={item.declined} />
+              <StatBox label={t('admin.userStats.attendees')} value={item.attendees} />
+              <StatBox label={t('admin.userStats.blessings')} value={item.blessings} />
+            </div>
+            <p className="mt-2 flex flex-wrap gap-x-4 text-xs text-ink-soft">
+              <span>
+                {t('admin.userStats.created')}: {formatDate(item.createdAt, locale)}
+              </span>
+              {item.publishedAt && (
+                <span>
+                  {t('admin.userStats.published')}: {formatDate(item.publishedAt, locale)}
+                </span>
+              )}
+              {item.lastViewedAt && (
+                <span>
+                  {t('admin.userStats.lastViewed')}: {formatDate(item.lastViewedAt, locale)}
+                </span>
+              )}
+              {item.onFreePlan && item.expiresAt && (
+                <span>
+                  {t('admin.userStats.freeUntil')}: {formatDate(item.expiresAt, locale)}
+                </span>
+              )}
             </p>
-          </div>
-          <InvitationActions item={item} />
-        </li>
-      ))}
-    </ul>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
