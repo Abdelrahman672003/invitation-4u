@@ -10,7 +10,7 @@ import {
 import ar from './locales/ar.json';
 import en from './locales/en.json';
 
-const STORAGE_KEY = 'daawa.locale';
+const STORAGE_KEY = 'invitation4u.locale';
 
 function readStoredLocale(): Locale | null {
   try {
@@ -35,6 +35,10 @@ function applyDocumentLocale(locale: string) {
     : DEFAULT_LOCALE;
   document.documentElement.lang = resolved;
   document.documentElement.dir = directionFor(resolved);
+  document.title = i18n.t('brand.title', { lng: resolved });
+  document
+    .querySelector('meta[name="description"]')
+    ?.setAttribute('content', i18n.t('brand.description', { lng: resolved }));
 }
 
 void i18n.use(initReactI18next).init({

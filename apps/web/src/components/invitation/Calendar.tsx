@@ -56,9 +56,9 @@ export function icsFile(details: Details) {
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Daawa//Invitation//EN',
+    'PRODID:-//Invitation 4u//Invitation//EN',
     'BEGIN:VEVENT',
-    `UID:${start}-${Math.abs(hash(details.title))}@daawa`,
+    `UID:${start}-${Math.abs(hash(details.title))}@invitation-4u.com`,
     `DTSTAMP:${now}`,
     `DTSTART;TZID=${details.timeZone}:${start}`,
     `DTEND;TZID=${details.timeZone}:${end}`,

@@ -11,6 +11,7 @@ import type {
 import { cn } from '@/lib/cn';
 import { CornerMark, OrnamentGraphic, patternBackground } from './ornaments';
 import { mediaUrl } from '@/lib/media';
+import { SocialLinks } from '@/components/ui/SocialLinks';
 import { CalendarCard } from './Calendar';
 import { Decor, GlassBackdrop, LookProvider, glass, lookFor, shade, useLook } from './sectionLook';
 import { EnvelopeIntro } from './Envelope';
@@ -882,7 +883,12 @@ export function InvitationLanding({
             <OrnamentGraphic kind={design.ornament} className="h-auto w-full" />
           </div>
           <p className={cn('relative mt-4 text-2xl', titleFont)}>{text.title}</p>
-          <p className="relative mt-6 text-xs opacity-70">
+          <SocialLinks
+            className="relative mt-6 justify-center opacity-40"
+            size="size-4"
+            linkClassName="hover:opacity-100"
+          />
+          <p className="relative mt-4 text-xs opacity-70">
             <a href="/" target="_blank" rel="noopener" className="hover:underline">
               {t('public.madeWith')}
             </a>
@@ -1035,7 +1041,7 @@ function Countdown({
 function FreeMark({ locale }: { locale: Locale }) {
   const t = i18n.getFixedT(locale);
   const tile =
-    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='180'%3E%3Ctext x='130' y='90' text-anchor='middle' transform='rotate(-24 130 90)' font-family='sans-serif' font-size='20' font-weight='600' fill='%23000' fill-opacity='.13'%3EDaawa · Free plan%3C/text%3E%3C/svg%3E\")";
+    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='180'%3E%3Ctext x='130' y='90' text-anchor='middle' transform='rotate(-24 130 90)' font-family='sans-serif' font-size='20' font-weight='600' fill='%23000' fill-opacity='.13'%3EInvitation 4u · Free plan%3C/text%3E%3C/svg%3E\")";
   return (
     <>
       <div

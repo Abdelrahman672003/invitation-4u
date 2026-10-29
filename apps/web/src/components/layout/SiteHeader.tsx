@@ -61,8 +61,14 @@ export function SiteHeader() {
   );
 
   const initial = user ? (Array.from(user.name.trim())[0] ?? '?') : '';
+  const contact = (
+    <ButtonLink to="/contact" variant="secondary" size="sm">
+      {t('nav.contact')}
+    </ButtonLink>
+  );
   const actions = user ? (
     <>
+      {contact}
       <Button
         variant="secondary"
         size="sm"
@@ -82,6 +88,7 @@ export function SiteHeader() {
     </>
   ) : (
     <>
+      {contact}
       <ButtonLink to="/login" variant="ghost" size="sm">
         {t('nav.login')}
       </ButtonLink>
