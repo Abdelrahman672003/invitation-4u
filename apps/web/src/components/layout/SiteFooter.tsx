@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/brand/Logo';
+import { SocialLinks } from '@/components/ui/SocialLinks';
 
 export function SiteFooter() {
   const { t } = useTranslation();
@@ -36,6 +37,10 @@ export function SiteFooter() {
         <div>
           <Logo />
           <p className="mt-2 max-w-xs text-sm text-muted">{t('brand.tagline')}</p>
+          <SocialLinks
+            className="mt-4"
+            linkClassName="size-9 rounded-full bg-sunken text-ink-soft hover:bg-brand-50 hover:text-brand-700"
+          />
         </div>
         {columns.map((column) => (
           <nav key={column.title} aria-label={column.title}>

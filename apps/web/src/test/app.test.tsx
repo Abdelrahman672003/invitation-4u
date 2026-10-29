@@ -20,7 +20,7 @@ describe('RTL and language', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Switch to English' }));
     expect(document.documentElement).toHaveAttribute('dir', 'ltr');
     expect(document.documentElement).toHaveAttribute('lang', 'en');
-    expect(localStorage.getItem('daawa.locale')).toBe('en');
+    expect(localStorage.getItem('invitation4u.locale')).toBe('en');
   });
 });
 

@@ -74,7 +74,7 @@ const escapeHtml = (value: string) =>
  */
 publicRouter.get('/share/:slug', async (req, res) => {
   const base = env.APP_URL.replace(/\/$/, '');
-  let title = 'دعوة — دعوات رقمية أنيقة';
+  let title = 'Invitation 4u — دعوات رقمية أنيقة';
   let description = 'لديك دعوة جديدة، افتحها من هنا.';
   let image = `${base}/og-default.png`;
   let locale = 'ar';
@@ -82,7 +82,10 @@ publicRouter.get('/share/:slug', async (req, res) => {
     const row = await findPublished(String(req.params.slug));
     const content = invitationContentSchema.parse(row.contentJson);
     locale = row.contentLocale === 'en' ? 'en' : 'ar';
-    title = content.headline || content.hostLine || title;
+    title =
+      content.headline ||
+      content.hostLine ||
+      (locale === 'en' ? 'Invitation 4u — Elegant digital invitations' : title);
     description =
       [content.occasionLine, content.venueName].filter(Boolean).join(' · ') ||
       (locale === 'en' ? 'You are invited. Open the invitation.' : description);
@@ -100,7 +103,7 @@ publicRouter.get('/share/:slug', async (req, res) => {
 <title>${escapeHtml(title)}</title>
 <meta name="description" content="${escapeHtml(description)}" />
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="دعوة" />
+<meta property="og:site_name" content="Invitation 4u" />
 <meta property="og:title" content="${escapeHtml(title)}" />
 <meta property="og:description" content="${escapeHtml(description)}" />
 <meta property="og:image" content="${escapeHtml(image)}" />

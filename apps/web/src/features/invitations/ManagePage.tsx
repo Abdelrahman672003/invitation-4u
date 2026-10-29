@@ -1,6 +1,16 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import i18n from 'i18next';
-import { ArrowLeft, Copy, Crown, Pencil, Plus, Share2, Trash2, Users } from 'lucide-react';
+import {
+  ArrowLeft,
+  Copy,
+  Crown,
+  Pencil,
+  Plus,
+  Printer,
+  Share2,
+  Trash2,
+  Users,
+} from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -475,6 +485,10 @@ function SharePanel({ invitation }: { invitation: InvitationDto }) {
           <Share2 className="size-4" aria-hidden />
           {t('share.whatsapp')}
         </a>
+        <ButtonLink to={`/invitations/${invitation.id}/print`} variant="secondary">
+          <Printer className="size-4" aria-hidden />
+          {t('print.cta')}
+        </ButtonLink>
         {canNativeShare && (
           <Button
             variant="secondary"

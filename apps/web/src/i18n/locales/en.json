@@ -1,7 +1,9 @@
 {
   "brand": {
     "name": "Invitation 4u",
-    "tagline": "Elegant digital invitations for every occasion"
+    "tagline": "Elegant digital invitations for every occasion",
+    "title": "Invitation 4u — Elegant digital invitations",
+    "description": "Design your digital invitation, share it on WhatsApp and track RSVPs."
   },
   "nav": {
     "home": "Home",
@@ -11,6 +13,7 @@
     "admin": "Admin",
     "profile": "Account",
     "login": "Sign in",
+    "contact": "Contact us",
     "register": "Create account",
     "logout": "Sign out",
     "switchLanguage": "العربية",
@@ -573,6 +576,7 @@
       "title": "Contact and support",
       "subtitle": "Questions about an invitation, a payment or your account? We are happy to help.",
       "emailLabel": "Email us",
+      "follow": "Follow us on social media",
       "notConfigured": "Our support email will be published here before launch.",
       "hours": "We reply within one business day."
     },
@@ -938,7 +942,7 @@
       "next": "Next",
       "start": "Start",
       "finish": "Go to share & publish",
-    "fillFirst": "Fill in the required details to continue:",
+      "fillFirst": "Fill in the required details to continue:",
       "restart": "Show the guide",
       "steps": {
         "welcome": {
@@ -1449,5 +1453,14 @@
     "minute": "Minute",
     "period": "AM / PM",
     "custom": "Custom colour"
+  },
+  "print": {
+    "cta": "Print a card with QR",
+    "print": "Print",
+    "back": "Back",
+    "hint": "Your invitation's cover exactly as designed (A5) with a QR code that opens it. In the print window choose a printer or \"Save as PDF\", and turn on \"Background graphics\" if colours look missing.",
+    "notPublished": "Printing is available once the invitation is published.",
+    "scan": "Scan the code to open the invitation",
+    "qrAlt": "QR code that opens the invitation"
   }
 }

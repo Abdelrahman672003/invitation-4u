@@ -22,6 +22,7 @@ import { RedirectIfAuthenticated, RequireAuth } from '@/features/auth/guards';
 import { TemplateGalleryPage, TemplatePreviewPage } from '@/features/templates/TemplatePages';
 import { EditorPage } from '@/features/invitations/EditorPage';
 import { ManagePage } from '@/features/invitations/ManagePage';
+import { PrintPage } from '@/features/invitations/PrintPage';
 import { PublicInvitationPage } from '@/features/invitations/PublicInvitationPage';
 import {
   PaymentReturnPage,
@@ -149,6 +150,14 @@ export const routes: RouteObject[] = [
     ],
   },
   { path: 'i/:slug', element: <PublicInvitationPage /> },
+  {
+    path: 'invitations/:id/print',
+    element: (
+      <RequireAuth>
+        <PrintPage />
+      </RequireAuth>
+    ),
+  },
   {
     element: <AuthLayout />,
     children: [

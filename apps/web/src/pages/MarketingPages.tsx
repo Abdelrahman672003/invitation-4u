@@ -2,6 +2,8 @@ import type { ReactNode } from 'react';
 import { ArrowRight, Check, Sparkles } from 'lucide-react';
 import { Link, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { SocialLinks } from '@/components/ui/SocialLinks';
+import { SOCIAL_LINKS } from '@/lib/social';
 import { localized } from '@invite/shared';
 import { ButtonLink } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Card';
@@ -280,6 +282,15 @@ export function ContactPage() {
           <Alert tone="info">{t('marketing.contact.notConfigured')}</Alert>
         )}
         <p className="mt-4 text-sm text-ink-soft">{t('marketing.contact.hours')}</p>
+        {SOCIAL_LINKS.length > 0 && (
+          <div className="mt-6 border-t border-line pt-5">
+            <p className="mb-3 text-sm text-muted">{t('marketing.contact.follow')}</p>
+            <SocialLinks
+              size="size-5"
+              linkClassName="size-11 rounded-full bg-sunken text-ink-soft hover:bg-brand-50 hover:text-brand-700"
+            />
+          </div>
+        )}
       </div>
     </Page>
   );
