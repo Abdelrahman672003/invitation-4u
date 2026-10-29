@@ -1080,7 +1080,7 @@ function StickyReply({
       href="#rsvp"
       tabIndex={visible ? 0 : -1}
       className={cn(
-        'fixed bottom-5 start-1/2 z-50 inline-flex h-12 items-center rounded-full px-7 font-medium shadow-lg transition-all duration-300 ltr:-translate-x-1/2 rtl:translate-x-1/2',
+        'fixed bottom-5 right-5 z-50 inline-flex h-12 items-center rounded-full px-7 font-medium shadow-lg transition-all duration-300',
         visible ? 'opacity-100' : 'pointer-events-none translate-y-4 opacity-0',
       )}
       style={{ background: accent, color: onAccent }}

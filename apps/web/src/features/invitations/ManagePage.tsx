@@ -214,7 +214,7 @@ function PublishPanel({
       void client.invalidateQueries({ queryKey: ['invitations'] });
     },
   });
-  const freeAvailable = !upgrade && !invitation.freeUsed && !needsPremium;
+  const freeAvailable = !upgrade && !invitation.freeUsed;
   const checkout = useMutation({
     mutationFn: (packageCode: string) =>
       api<{ data: { redirectUrl: string } }>('/payments/checkout', {

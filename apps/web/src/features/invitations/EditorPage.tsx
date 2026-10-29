@@ -1,6 +1,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -10,6 +11,8 @@ import {
 } from 'react';
 import {
   ArrowLeft,
+  CircleHelp,
+  Crown,
   FileText,
   LayoutTemplate,
   ListChecks,
@@ -39,6 +42,7 @@ import { ToggleRow as Toggle } from '@/components/ui/Toggle';
 import { ButtonLink } from '@/components/ui/Button';
 import { Alert, Badge } from '@/components/ui/Card';
 import { isPosterTheme } from '@/components/invitation/ThemePoster';
+import { EditorGuide, GUIDE_STEPS, guideSeen, markGuideSeen } from './EditorGuide';
 import { PhotoField } from './PhotoField';
 import { MusicField } from './MusicField';
 import { GalleryField } from './GalleryField';
@@ -161,13 +165,29 @@ function Panel({
   children: ReactNode;
 }) {
   const accordion = useContext(EditorAccordion);
+  const isOpen = accordion.open === id;
+  const firstRender = useRef(true);
+  // When a section opens, bring it into view (the section that was open above it collapses meanwhile).
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    if (!isOpen) return;
+    const timer = setTimeout(() => {
+      document
+        .getElementById(`ed-${id}-trigger`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
+    return () => clearTimeout(timer);
+  }, [id, isOpen]);
   return (
     <AccordionSection
       id={`ed-${id}`}
       icon={icon}
       title={title}
       summary={summary}
-      open={accordion.open === id}
+      open={isOpen}
       onToggle={() => accordion.toggle(id)}
     >
       {children}
@@ -215,6 +235,22 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
   const [device, setDevice] = useState<'desktop' | 'mobile'>('mobile');
   const [tab, setTab] = useState<'edit' | 'preview'>('edit');
   const [openPanel, setOpenPanel] = useState('details');
+  const [guideStep, setGuideStep] = useState<number | null>(() =>
+    guideSeen(invitation.id) ? null : 0,
+  );
+  const goToGuideStep = (step: number) => {
+    setGuideStep(step);
+    const panel = GUIDE_STEPS[step]?.panel;
+    if (panel) {
+      setTab('edit');
+      setOpenPanel(panel);
+    }
+  };
+  const closeGuide = () => {
+    markGuideSeen(invitation.id);
+    setGuideStep(null);
+  };
+  const publishStep = guideStep === GUIDE_STEPS.length - 1;
   const sidebarWidth = useSidebarWidth();
   const templates = useTemplates(invitation.categorySlug);
 
@@ -292,7 +328,16 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
             <p className="mb-2 text-sm font-medium text-ink-soft">{t('editor.fields.template')}</p>
             <ul className="grid grid-cols-3 gap-2">
               {templates.data?.map((item) => (
-                <li key={item.id}>
+                <li key={item.id} className="relative">
+                  {item.isPremium && (
+                    <span
+                      className="pointer-events-none absolute end-1.5 top-1.5 z-10 inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r from-gold-200 via-gold-300 to-gold-500 px-1.5 py-0.5 text-[0.65rem] font-semibold text-brand-900 shadow-soft"
+                      title={t('templates.premium')}
+                    >
+                      <Crown className="size-3" aria-hidden />
+                      {t('templates.premium')}
+                    </span>
+                  )}
                   <button
                     type="button"
                     onClick={() => update({ templateSlug: item.slug })}
@@ -380,6 +425,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
               <Input
                 {...p}
                 value={c.hostLine}
+                placeholder={t('editor.placeholders.hostLine')}
                 maxLength={80}
                 onChange={(e) => updateContent({ hostLine: e.target.value })}
               />
@@ -390,6 +436,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
               <Input
                 {...p}
                 value={c.headline}
+                placeholder={t('editor.placeholders.headline')}
                 maxLength={80}
                 onChange={(e) => updateContent({ headline: e.target.value })}
               />
@@ -400,6 +447,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
               <Input
                 {...p}
                 value={c.occasionLine}
+                placeholder={t('editor.placeholders.occasionLine')}
                 maxLength={100}
                 onChange={(e) => updateContent({ occasionLine: e.target.value })}
               />
@@ -434,6 +482,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
               <Input
                 {...p}
                 value={c.venueName}
+                placeholder={t('editor.placeholders.venueName')}
                 maxLength={120}
                 onChange={(e) => updateContent({ venueName: e.target.value })}
               />
@@ -444,6 +493,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
               <Input
                 {...p}
                 value={c.venueAddress}
+                placeholder={t('editor.placeholders.venueAddress')}
                 maxLength={200}
                 onChange={(e) => updateContent({ venueAddress: e.target.value })}
               />
@@ -458,6 +508,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
                 rows={3}
                 maxLength={400}
                 value={c.message}
+                placeholder={t('editor.placeholders.message')}
                 onChange={(e) => updateContent({ message: e.target.value })}
               />
             )}
@@ -513,6 +564,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
                 rows={3}
                 maxLength={300}
                 value={c.verse}
+                placeholder={t('editor.placeholders.verse')}
                 onChange={(e) => updateContent({ verse: e.target.value })}
               />
             )}
@@ -545,6 +597,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
                 rows={4}
                 maxLength={600}
                 value={c.story}
+                placeholder={t('editor.placeholders.story')}
                 onChange={(e) => updateContent({ story: e.target.value })}
               />
             )}
@@ -616,6 +669,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
               <Input
                 {...p}
                 value={c.dressCode}
+                placeholder={t('editor.placeholders.dressCode')}
                 maxLength={80}
                 onChange={(e) => updateContent({ dressCode: e.target.value })}
               />
@@ -630,6 +684,7 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
                 rows={2}
                 maxLength={300}
                 value={c.notes}
+                placeholder={t('editor.placeholders.notes')}
                 onChange={(e) => updateContent({ notes: e.target.value })}
               />
             )}
@@ -746,10 +801,28 @@ function Editor({ invitation }: { invitation: InvitationDto }) {
         <ButtonLink
           to={`/invitations/${invitation.id}/manage`}
           size="sm"
-          className="ms-auto md:ms-2"
+          className={cn('ms-auto md:ms-2', publishStep && 'animate-pulse ring-4 ring-brand-300')}
         >
           {t('editorRsvp.manage')}
         </ButtonLink>
+        <button
+          type="button"
+          onClick={() => goToGuideStep(0)}
+          aria-label={t('editor.guide.restart')}
+          title={t('editor.guide.restart')}
+          className="grid size-9 place-items-center rounded-full text-ink-soft hover:bg-sunken"
+        >
+          <CircleHelp className="size-5" aria-hidden />
+        </button>
+        {guideStep !== null && (
+          <EditorGuide
+            step={guideStep}
+            manageHref={`/invitations/${invitation.id}/manage`}
+            missing={Object.keys(missing)}
+            onStep={goToGuideStep}
+            onClose={closeGuide}
+          />
+        )}
       </div>
 
       <div

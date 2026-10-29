@@ -275,9 +275,9 @@ describe('free plan', () => {
     expect(dto).toMatchObject({ expired: true, views: 0 });
   });
 
-  it('is not available for premium templates', async () => {
+  it('is also available for premium templates, as a watermarked trial', async () => {
     const premium = await setup({ premiumTemplate: true });
-    expect((await publish(premium.owner, premium.id)).status).toBe(402);
+    expect((await publish(premium.owner, premium.id)).status).toBe(200);
   });
 
   it('is limited per account', async () => {
