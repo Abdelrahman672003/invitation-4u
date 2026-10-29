@@ -3,7 +3,7 @@
  * Example: facebook: 'https://www.facebook.com/invitation4u'
  */
 export const SOCIAL_URLS = {
-  facebook: '',
+  facebook: 'https://www.facebook.com/profile.php?id=61595797510804',
   instagram: '',
   tiktok: '',
 } as const;

@@ -574,11 +574,34 @@
     },
     "contact": {
       "title": "Contact and support",
-      "subtitle": "Questions about an invitation, a payment or your account? We are happy to help.",
+      "subtitle": "Have a question about an invitation, a payment or your account? Write to us and we will reply as soon as we can.",
       "emailLabel": "Email us",
       "follow": "Follow us on social media",
-      "notConfigured": "Our support email will be published here before launch.",
-      "hours": "We reply within one business day."
+      "hours": "We reply within one business day",
+      "eyebrow": "We're here to help",
+      "emailBody": "For questions, refund requests and any payment problem.",
+      "socialBody": "Follow new templates, offers and invitation ideas.",
+      "soon": "Our contact channels will appear here soon. Meanwhile, see the FAQ below.",
+      "whatsapp": {
+        "title": "WhatsApp",
+        "body": "The fastest way to reach us. Send your question and we will reply.",
+        "cta": "Start a chat",
+        "prefill": "Hello, I have a question about Invitation 4u"
+      },
+      "help": {
+        "title": "Before you write to us",
+        "faq": "Frequently asked questions",
+        "refund": "Refund policy",
+        "pricing": "Pricing and packages"
+      },
+      "tips": {
+        "title": "To help us reply faster",
+        "items": [
+          "Include the email your account is registered with.",
+          "For payment issues, send the order or receipt number.",
+          "Send the invitation link and a screenshot of the problem if you have one."
+        ]
+      }
     },
     "home": {
       "anatomy": {
