@@ -13,7 +13,6 @@ import {
   publishReadiness,
   type InvitationDto,
   type InvitationStats,
-  usesPremiumDesign,
 } from '@invite/shared';
 import { recordAudit } from '../../lib/audit.js';
 import { freeExpiry, isLive } from '../../lib/free-plan.js';
@@ -344,7 +343,7 @@ invitationsRouter.post('/:id/restore', async (req, res) => {
 });
 
 // Publishing. A paid invitation publishes for good. Otherwise this starts the built-in free plan:
-// 48 hours, watermarked, once per invitation, a few per account, non-premium templates only.
+// 48 hours, watermarked, once per invitation, a few per account (premium templates included).
 invitationsRouter.post('/:id/publish', async (req, res) => {
   const id = parseInput(idParam, req.params.id);
   const current = await loadOwned(id, req.auth!.user.id);
@@ -366,13 +365,7 @@ invitationsRouter.post('/:id/publish', async (req, res) => {
   let expiresAt: Date | null = null;
   let freeUsedAt = current.freeUsedAt;
   if (!paid) {
-    // A premium template, or the customer's own Design Studio poster, needs the premium package.
-    const ownDesign = usesPremiumDesign(invitationContentSchema.parse(current.contentJson));
-    if (current.template.isPremium || ownDesign) {
-      throw new AppError(402, 'PAYMENT_REQUIRED', 'Premium templates need a paid package', {
-        plan: 'validation.premiumRequired',
-      });
-    }
+    // Premium templates and the customer's own poster may be tried on the free plan too.
     if (current.freeUsedAt)
       throw new AppError(
         402,

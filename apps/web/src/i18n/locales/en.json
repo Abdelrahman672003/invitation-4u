@@ -917,6 +917,59 @@
       "luxe": "Serif",
       "sans": "Plain",
       "caps": "Modern"
+    },
+    "placeholders": {
+      "hostLine": "e.g. With joy, we invite you to",
+      "headline": "e.g. Ahmed & Sara",
+      "occasionLine": "e.g. Wedding celebration",
+      "venueName": "e.g. Grand Nile Hall",
+      "venueAddress": "e.g. 12 University St, Cairo",
+      "message": "e.g. Your presence completes our joy. We look forward to seeing you.",
+      "verse": "e.g. A verse or quotation you love",
+      "story": "e.g. We met at university and never ran out of things to say…",
+      "dressCode": "e.g. Formal or light colours",
+      "notes": "e.g. Free parking in front of the hall."
+    },
+    "guide": {
+      "label": "Invitation guide",
+      "stepOf": "Step {{current}} of {{total}}",
+      "skip": "Skip",
+      "back": "Back",
+      "next": "Next",
+      "start": "Start",
+      "finish": "Go to share & publish",
+    "fillFirst": "Fill in the required details to continue:",
+      "restart": "Show the guide",
+      "steps": {
+        "welcome": {
+          "title": "Welcome 👋",
+          "body": "We will walk you through it step by step until your invitation is published and ready to send. Everything saves automatically, and you can skip this guide any time."
+        },
+        "design": {
+          "title": "Pick a design",
+          "body": "Choose the template you like and change its colour if you want. The preview updates right away."
+        },
+        "details": {
+          "title": "Write the event details",
+          "body": "Names, date, time and place. Each field has an example showing what to write."
+        },
+        "optional": {
+          "title": "Choose which sections show",
+          "body": "Switch sections such as the countdown, schedule, guestbook and envelope on or off."
+        },
+        "landing": {
+          "title": "Customise the invitation page",
+          "body": "Add your photos, music and story. All of this is optional."
+        },
+        "rsvp": {
+          "title": "Guest replies",
+          "body": "Let guests reply directly, and set a reply deadline and the maximum party size."
+        },
+        "publish": {
+          "title": "Pay and publish",
+          "body": "We will take you to the \"Share & guests\" page, where you choose the free plan or a paid package. You will be taken to the secure payment platform, then your invitation goes live and you can share it on WhatsApp."
+        }
+      }
     }
   },
   "manage": {
@@ -935,7 +988,7 @@
     "views_other": "Opened {{count}} times",
     "premium": {
       "title": "This invitation uses Premium features",
-      "body": "Choose the Premium package to publish it as designed. Or switch back to a standard design.",
+      "body": "You can try it free for two days with a watermark, or choose the Premium package to keep it published as designed.",
       "items": {
         "template": "A premium template",
         "studio": "Your own poster (Design Studio)",
